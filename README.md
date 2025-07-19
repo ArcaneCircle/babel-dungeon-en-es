@@ -1,8 +1,6 @@
-# Babel Dungeon
+# Babel Dungeon (🇬🇧/🇪🇸)
 
-A gamified tool for vocabulary learning.
-This is the base/common shared code between the specific
-language pairs repositories.
+A gamified tool for English/Spanish vocabulary learning
 
 ## Creating new flavor
 
