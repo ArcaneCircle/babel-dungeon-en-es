@@ -3,6 +3,7 @@
   "type": "module",
   "scripts": {
     "generate": "./scripts/generate.py",
+    "sort": "./scripts/generate.py sort",
     "start": "vite --port 3000",
     "fix": "prettier --write .",
     "check": "tsc && prettier --check .",

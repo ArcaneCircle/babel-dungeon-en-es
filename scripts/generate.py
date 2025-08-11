@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import sys
 
 
 def sort0(pair: tuple[int, str]) -> int:
@@ -38,12 +39,14 @@ def main() -> None:
 
     sentences = {}
     meanings = {}
+    meanings_ids = {}
     with open(source) as fd:
         for line in fd.readlines():
             row = line.strip().split("\t")
             id = int(row[0])
             sentences[id] = row[1]
             meanings.setdefault(id, []).append(row[3])
+            meanings_ids[row[3]] = int(row[2])
 
     print(f"TOTAL: {len(sentences)}")
     count = min(len(sentences), count)
@@ -66,6 +69,15 @@ def main() -> None:
         new_sents.append((id, sen))
         del sentences[id]
 
+    if len(sys.argv) == 2 and sys.argv[1] == "sort":
+        with open(source, "w") as f:
+            for id, sen in new_sents:
+                for meaning in meanings[id]:
+                    mid = meanings_ids[meaning]
+                    f.write(f"{id}\t{sen}\t{mid}\t{meaning}\n")
+        print(f"sorted {len(new_sents)} sentences")
+        return
+
     with open(dest, "w") as f:
         f.write("export const SENTENCES = `")
         count2 = 0
@@ -75,6 +87,7 @@ def main() -> None:
             if count2 != count:
                 f.write("\n")
         f.write('`.split("\\n");\n')
+    print(f"generated {count2} sentences")
 
 
 if __name__ == "__main__":
