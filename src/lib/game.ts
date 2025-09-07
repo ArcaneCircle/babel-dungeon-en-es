@@ -361,7 +361,7 @@ async function createNewSession(
   }
 
   monsters.sort((mon1, mon2) => {
-    if (mon1.seen===0 || mon2.seen===0) {
+    if (mon1.seen === 0 || mon2.seen === 0) {
       return mon2.seen - mon1.seen;
     }
     return 0;
