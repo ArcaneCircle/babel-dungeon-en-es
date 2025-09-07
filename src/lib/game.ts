@@ -359,6 +359,14 @@ async function createNewSession(
   if (monsters.length < 10) {
     monsters = await db.monsters.orderBy("due").limit(10).toArray();
   }
+
+  monsters.sort((mon1, mon2) => {
+    if (mon1.seen===0 || mon2.seen===0) {
+      return mon2.seen - mon1.seen;
+    }
+    return 0;
+  });
+
   return {
     start,
     mode,
