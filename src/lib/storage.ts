@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from "dexie";
 
 import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
+import { SENTENCES } from "~/lib/sentences";
 
 const VERSION = 3;
 
@@ -39,7 +40,9 @@ export async function importBackup(backup: Backup) {
     return;
   }
 
-  await db.monsters.bulkPut(backup.monsters);
+  await db.monsters.bulkPut(
+    backup.monsters.filter((mon) => mon.id < SENTENCES.length),
+  );
   localStorage.showIntro = backup.showIntro;
   localStorage.session = backup.session || "";
   localStorage.unseenIndex = backup.unseenIndex;
