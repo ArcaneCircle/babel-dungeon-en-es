@@ -142,7 +142,7 @@ function getResultsModal(
 
 export function sendMonsterUpdate(
   monster: Monster,
-  correct: boolean,
+  correct: number,
 ): ModalPayload | null {
   monster = { ...monster };
   let modal = null;
@@ -151,7 +151,7 @@ export function sendMonsterUpdate(
   monster.seen = now.getTime();
   let xp = 0;
   if (correct) {
-    monster.streak = Math.min(monster.streak + 1, MAX_MONSTER_STREAK);
+    monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
     if (level !== MAX_LEVEL) {
       const bonus = Math.min(Math.floor(level / 5), 40);
       xp = Math.min(bonus + monster.streak, 50);
@@ -180,7 +180,8 @@ export function sendMonsterUpdate(
       }
       default: {
         if (monster.streak > 15) {
-          monster.due = addDays(30 * 5 + monster.streak * 4);
+          const mul = correct > 1 ? 10 : 4;
+          monster.due = addDays(30 * 5 + monster.streak * mul);
         } else if (monster.streak > 10) {
           monster.due = addDays(30 * (monster.streak - 10));
         } else if (monster.streak > MASTERED_STREAK) {

@@ -1,8 +1,9 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import PixelThumbsupSolid from "~icons/pixel/thumbsup-solid";
 import PixelThumbsdownSolid from "~icons/pixel/thumbsdown-solid";
+import PixelCrownSolid from "~icons/pixel/crown-solid";
 
-import { MAIN_COLOR, RED } from "~/lib/constants";
+import { MAIN_COLOR, RED, GOLDEN } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
 import { successSfx, errorSfx, clickSfx } from "~/lib/sounds";
@@ -17,11 +18,17 @@ import LevelUpModal from "~/components/modals/LevelUpModal";
 import ResultsModal from "~/components/modals/ResultsModal";
 
 const baseBtn = {
-  width: "50%",
   color: "white",
   border: "none",
   padding: "0.6em 0.5em",
   fontSize: "1.5em",
+  flexGrow: 1,
+};
+
+const btnContainerStyle = {
+  display: "flex",
+  flexDirection: "row" as "row",
+  flexWrap: "nowrap" as "nowrap",
 };
 
 const statusBarStyle = {
@@ -82,14 +89,23 @@ function Quiz({
     setShow(false);
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && !ttsWillSpeak) errorSfx.play();
-    sendMonsterUpdate(monster, false);
+    sendMonsterUpdate(monster, 0);
   }, [monster, ttsEnabled, sfxEnabled, defaultMode]);
   const onCorrect = useCallback(() => {
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
       successSfx.play();
     }
-    const mod = sendMonsterUpdate(monster, true);
+    const mod = sendMonsterUpdate(monster, 1);
+    setShowingResults(!!mod);
+    setModal(mod);
+  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount]);
+  const onMastered = useCallback(() => {
+    const ttsWillSpeak = ttsEnabled && defaultMode;
+    if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
+      successSfx.play();
+    }
+    const mod = sendMonsterUpdate(monster, 5);
     setShowingResults(!!mod);
     setModal(mod);
   }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount]);
@@ -196,30 +212,39 @@ function Quiz({
               {show ? (
                 <>
                   <p style={{ fontSize: "0.8em" }}>{_("Did you know it?")}</p>
-                  <button
-                    style={{ ...baseBtn, background: RED }}
-                    onClick={onFailed}
-                  >
-                    <PixelThumbsdownSolid />
-                  </button>
-                  <button
-                    style={{ ...baseBtn, background: MAIN_COLOR }}
-                    onClick={onCorrect}
-                  >
-                    <PixelThumbsupSolid />
-                  </button>
+                  <div style={btnContainerStyle}>
+                    <button
+                      style={{ ...baseBtn, background: RED }}
+                      onClick={onFailed}
+                    >
+                      <PixelThumbsdownSolid />
+                    </button>
+                    <button
+                      style={{ ...baseBtn, background: GOLDEN }}
+                      onClick={onMastered}
+                    >
+                      <PixelCrownSolid />
+                    </button>
+                    <button
+                      style={{ ...baseBtn, background: MAIN_COLOR }}
+                      onClick={onCorrect}
+                    >
+                      <PixelThumbsupSolid />
+                    </button>
+                  </div>
                 </>
               ) : (
-                <button
-                  onClick={onShow}
-                  style={{
-                    ...baseBtn,
-                    background: "#32526d",
-                    width: "100%",
-                  }}
-                >
-                  {_("Reveal")}
-                </button>
+                <div style={btnContainerStyle}>
+                  <button
+                    onClick={onShow}
+                    style={{
+                      ...baseBtn,
+                      background: "#32526d",
+                    }}
+                  >
+                    {_("Reveal")}
+                  </button>
+                </div>
               )}
             </div>
           </>
