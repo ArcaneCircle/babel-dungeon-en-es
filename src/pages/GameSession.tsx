@@ -3,7 +3,7 @@ import PixelThumbsupSolid from "~icons/pixel/thumbsup-solid";
 import PixelThumbsdownSolid from "~icons/pixel/thumbsdown-solid";
 import PixelCrownSolid from "~icons/pixel/crown-solid";
 
-import { MAIN_COLOR, RED, GOLDEN } from "~/lib/constants";
+import { MAIN_COLOR, RED, GOLDEN, MASTERED_STREAK } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
 import { successSfx, errorSfx, clickSfx } from "~/lib/sounds";
@@ -72,7 +72,9 @@ function Quiz({
   const [show, setShow] = useState(false);
   const [modal, setModal] = useState(null as ModalPayload | null);
 
-  const defaultMode = session.mode === "easy";
+  const defaultMode =
+    session.mode === "easy" ||
+    (session.mode === "medium" && monster.streak < MASTERED_STREAK);
   const ttsEnabled = getTTSEnabled();
   const sfxEnabled = getSFXEnabled();
   const { sentence, meanings } = getCard(monster.id);

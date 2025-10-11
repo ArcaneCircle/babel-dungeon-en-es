@@ -81,7 +81,7 @@ declare interface Backup {
   tts: string;
 }
 
-declare type GameMode = "easy" | "hard";
+declare type GameMode = "easy" | "medium" | "hard";
 
 declare type ModalPayload =
   | {
