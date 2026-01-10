@@ -9,6 +9,7 @@ import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
 import { successSfx, errorSfx, clickSfx } from "~/lib/sounds";
 import { getCard, sendMonsterUpdate } from "~/lib/game";
 import { tts } from "~/lib/tts";
+import { BG_PRIMARY, TEXT_PRIMARY } from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import MonsterCard from "~/components/MonsterCard";
@@ -18,7 +19,7 @@ import LevelUpModal from "~/components/modals/LevelUpModal";
 import ResultsModal from "~/components/modals/ResultsModal";
 
 const baseBtn = {
-  color: "white",
+  color: TEXT_PRIMARY,
   border: "none",
   padding: "0.6em 0.5em",
   fontSize: "1.5em",
@@ -34,7 +35,7 @@ const btnContainerStyle = {
 const statusBarStyle = {
   position: "sticky",
   top: 0,
-  backgroundColor: "black",
+  backgroundColor: BG_PRIMARY,
 };
 
 interface Props {
@@ -208,7 +209,7 @@ function Quiz({
                 position: "fixed",
                 bottom: "0",
                 width: "100%",
-                backgroundColor: "black",
+                backgroundColor: BG_PRIMARY,
               }}
             >
               {show ? (
@@ -241,6 +242,7 @@ function Quiz({
                     onClick={onShow}
                     style={{
                       ...baseBtn,
+                      color: "white",
                       background: "#32526d",
                     }}
                   >
