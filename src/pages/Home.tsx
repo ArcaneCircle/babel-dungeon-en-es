@@ -8,6 +8,7 @@ import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
 import { MAIN_COLOR, GOLDEN, BLUE, YELLOW } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 import { getLastPlayed, getShowIntro } from "~/lib/storage";
+import { BORDER_COLOR, TEXT_TERTIARY } from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import NoEnergyModal from "~/components/modals/NoEnergyModal";
@@ -21,7 +22,7 @@ import MenuButton from "~/components/MenuButton";
 const card = {
   display: "flex",
   flexDirection: "column" as "column",
-  border: "1px solid #464646",
+  border: `1px solid ${BORDER_COLOR}`,
   borderRadius: "5px",
   padding: "10px",
 };
@@ -38,7 +39,7 @@ export default function Home({ player }: Props) {
   const lastPlayed = getLastPlayed();
   const epicStreak = player.streak >= 7;
   const streakColor =
-    lastPlayed === today ? (epicStreak ? GOLDEN : MAIN_COLOR) : "#a8a8a8";
+    lastPlayed === today ? (epicStreak ? GOLDEN : MAIN_COLOR) : TEXT_TERTIARY;
   const streakSize = player.streak > 999 ? "0.9em" : undefined;
   const toReviewColor = player.toReview ? undefined : MAIN_COLOR;
 

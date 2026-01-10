@@ -3,6 +3,7 @@ import PixelCogSolid from "~icons/pixel/cog-solid";
 
 import { getSFXEnabled } from "~/lib/storage";
 import { clickSfx } from "~/lib/sounds";
+import { BG_SECONDARY } from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import SettingsModal from "~/components/modals/SettingsModal";
@@ -14,7 +15,7 @@ const containerStyle = {
   flexDirection: "row" as "row",
   alignItems: "center",
   justifyContent: "space-between",
-  backgroundColor: "#313131",
+  backgroundColor: BG_SECONDARY,
 };
 const settingsStyle = {
   padding: "0.5em",

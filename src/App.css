@@ -16,8 +16,8 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: black;
-  color: white;
+  background: var(--bg-primary);
+  color: var(--text-primary);
   font-family: "Press Start 2P", system-ui;
   font-size: 16px;
   overflow-wrap: break-word;
