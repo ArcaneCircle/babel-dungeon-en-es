@@ -42,9 +42,30 @@ let setPlayerState = null as ((player: Player) => void) | null;
 let setSessionState = (_: Session | null) => {};
 let setWelcomeCompleteState = (_: boolean) => {};
 const queue: ReceivedStatusUpdate<Payload>[] = [];
+const pendingMonsterUpdates: Array<{
+  monster: Monster;
+  sessionId: number;
+  xp: number;
+}> = [];
 
 // Initialize SENTENCES based on learning language
 initializeSentences(getLearningLanguage());
+
+// send batch of pending monster updates when user closes/minimizes the app
+function flushPendingMonsterUpdates() {
+  if (pendingMonsterUpdates.length === 0) return;
+
+  const statusUpdate = {
+    payload: {
+      uid: window.webxdc.selfAddr,
+      cmd: MONSTER_UPDATE_CMD,
+      monsters: [...pendingMonsterUpdates],
+    },
+  } as SendingStatusUpdate<Payload>;
+  window.webxdc.sendUpdate(statusUpdate, "");
+
+  pendingMonsterUpdates.length = 0;
+}
 
 const workerLoop = async () => {
   while (queue.length > 0) {
@@ -223,9 +244,17 @@ export function sendMonsterUpdate(
   }
 
   const session = getSession()!;
+  for (const { monster, xp } of pendingMonsterUpdates) {
+    updateMonster(monster, session);
+    session.xp += xp;
+  }
   updateMonster(monster, session);
   session.xp += xp;
   if (!session.pending.length && !session.failed.length) {
+    // session finished, clear pending updates queue,
+    // session contains updated state
+    pendingMonsterUpdates.length = 0;
+
     const update = {
       payload: {
         uid: window.webxdc.selfAddr,
@@ -247,16 +276,12 @@ export function sendMonsterUpdate(
     }
     window.webxdc.sendUpdate(update, "");
   } else {
-    const update = {
-      payload: {
-        uid: window.webxdc.selfAddr,
-        cmd: MONSTER_UPDATE_CMD,
-        sessionId: session.start,
-        monster,
-        xp,
-      },
-    } as SendingStatusUpdate<Payload>;
-    window.webxdc.sendUpdate(update, "");
+    pendingMonsterUpdates.push({
+      monster,
+      sessionId: session.start,
+      xp,
+    });
+    setSessionState(session);
   }
   return modal;
 }
@@ -284,6 +309,13 @@ export function initGame(
         max_serial: 0,
       });
     });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      flushPendingMonsterUpdates();
+    }
+  });
+  window.addEventListener("beforeunload", flushPendingMonsterUpdates);
 }
 
 async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
@@ -296,23 +328,30 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setWelcomeCompleteState = payload.welcomeHook;
         setSessionState(getSession());
         setPlayerState(await getPlayer());
+
         return; // this command is not real update, abort
       }
       case MONSTER_UPDATE_CMD: {
         const session = getSession();
-        if (session && payload.sessionId === session.start) {
-          const findMon = (m: Monster) =>
-            m.id === payload.monster.id && m.seen === payload.monster.seen;
-          // hack for iOS bug: updates get processed twice
-          if (
-            session.correct.findIndex(findMon) === -1 &&
-            session.failed.findIndex(findMon) === -1
-          ) {
-            updateMonster(payload.monster, session);
-            if (payload.xp) session.xp += payload.xp;
-            setSession(session);
+        let needsUpdate = false;
+        for (const { monster, sessionId, xp } of payload.monsters) {
+          if (session && sessionId === session.start) {
+            const findMon = (m: Monster) =>
+              m.id === monster.id && m.seen === monster.seen;
+            // hack for iOS bug: updates get processed twice
+            if (
+              session.correct.findIndex(findMon) === -1 &&
+              session.failed.findIndex(findMon) === -1
+            ) {
+              updateMonster(monster, session);
+              if (xp) session.xp += xp;
+              needsUpdate = true;
+            }
           }
-          setSessionState(session);
+        }
+        if (needsUpdate) {
+          setSession(session!);
+          setSessionState(session!);
         }
         break;
       }
