@@ -14,7 +14,7 @@ function getVersion(): string {
       .toString()
       .trim();
   } catch {
-    return "0.0.0";
+    return "v0.0.0";
   }
 }
 

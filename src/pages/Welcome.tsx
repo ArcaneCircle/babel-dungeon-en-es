@@ -89,7 +89,7 @@ export default function Welcome() {
                 {_("Import Game")}
               </MenuButton>
             </div>
-            <span style={versionStyle}>v{__APP_VERSION__}</span>
+            <span style={versionStyle}>{__APP_VERSION__}</span>
           </>
         ) : (
           <div style={buttonContainerStyle}>
