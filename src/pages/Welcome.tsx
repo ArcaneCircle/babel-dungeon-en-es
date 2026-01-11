@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { LANG1_NAME, LANG2_NAME } from "~/lib/constants";
+import { TEXT_SECONDARY } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 import { importGame, selectLanguage } from "~/lib/game";
 
@@ -13,7 +14,7 @@ const containerStyle = {
   justifyContent: "center",
   alignItems: "center",
   minHeight: "100vh",
-  padding: "2em",
+  padding: "0 2em",
   gap: "2em",
 };
 
@@ -34,6 +35,14 @@ const buttonContainerStyle = {
 const buttonStyle = {
   fontSize: "1.2em",
   padding: "1em 2em",
+};
+
+const versionStyle = {
+  position: "fixed" as "fixed",
+  bottom: "1em",
+  right: "1em",
+  fontSize: "0.75rem",
+  color: TEXT_SECONDARY,
 };
 
 export default function Welcome() {
@@ -67,17 +76,21 @@ export default function Welcome() {
         {showInvalidBackup && <InvalidBackupModal />}
       </ModalContext.Provider>
       <div style={containerStyle}>
-        <div style={titleStyle}>Babel Dungeon</div>
-
         {stage === "initial" ? (
-          <div style={buttonContainerStyle}>
-            <MenuButton style={buttonStyle} onClick={onNewGame}>
-              {_("New Game")}
-            </MenuButton>
-            <MenuButton style={buttonStyle} onClick={onImportGame}>
-              {_("Import Game")}
-            </MenuButton>
-          </div>
+          <>
+            <img src="icon.png" style={{ width: "8em" }} />
+            <div style={titleStyle}>Babel Dungeon</div>
+
+            <div style={buttonContainerStyle}>
+              <MenuButton style={buttonStyle} onClick={onNewGame}>
+                {_("New Game")}
+              </MenuButton>
+              <MenuButton style={buttonStyle} onClick={onImportGame}>
+                {_("Import Game")}
+              </MenuButton>
+            </div>
+            <span style={versionStyle}>v{__APP_VERSION__}</span>
+          </>
         ) : (
           <div style={buttonContainerStyle}>
             <div style={{ textAlign: "center", marginBottom: "1em" }}>

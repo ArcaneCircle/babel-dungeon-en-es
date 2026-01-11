@@ -101,3 +101,6 @@ declare type ModalPayload =
       accuracy: number;
       next: ModalPayload | null;
     };
+
+/** Injected by Vite: `git describe --tags`. */
+declare const __APP_VERSION__: string;
