@@ -16,6 +16,7 @@ export default function CreditsModal(props: Props) {
           <hr />
         </div>
         <div style={{ fontSize: "0.9em" }}>
+          <p>Babel Dungeon {__APP_VERSION__}</p>
           <p>{_("Developer: Asiel Diaz Benitez (adb)")}</p>
           <p>{_("Sentences collection: tatoeba.org")}</p>
           <p>{_('UI Icons: "Pixel Icon" by HackerNoon')}</p>
