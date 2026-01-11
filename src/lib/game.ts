@@ -1,6 +1,7 @@
 import { ReceivedStatusUpdate, SendingStatusUpdate } from "@webxdc/types";
 
 import { SENTENCES } from "~/lib/sentences";
+import { initializeSentences } from "~/lib/invertSentences";
 import { MAX_LEVEL, MASTERED_STREAK } from "~/lib/constants";
 import {
   db,
@@ -22,14 +23,16 @@ import {
   getUnseenIndex,
   setMaxSerial,
   getMaxSerial,
-  setShowIntro,
   importBackup,
   isValidBackup,
+  getLearningLanguage,
+  setLearningLanguage,
 } from "~/lib/storage";
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
   NEW_CMD = "new",
+  LANG_CMD = "lang",
   FINISHED_CMD = "finished",
   IMPORT_CMD = "import";
 const MAX_MONSTER_STREAK = 999;
@@ -37,7 +40,12 @@ const sixMinutes = 6 * 60 * 1000;
 let energyLastCheck = 0;
 let setPlayerState = null as ((player: Player) => void) | null;
 let setSessionState = (_: Session | null) => {};
+let setWelcomeCompleteState = (_: boolean) => {};
 const queue: ReceivedStatusUpdate<Payload>[] = [];
+
+// Initialize SENTENCES based on learning language
+initializeSentences(getLearningLanguage());
+
 const workerLoop = async () => {
   while (queue.length > 0) {
     await processUpdate(queue.shift()!);
@@ -96,7 +104,25 @@ export async function getPlayer(): Promise<Player> {
   };
 }
 
-export function importGame(backup: Backup): boolean {
+export function selectLanguage(lang: "LANG1" | "LANG2") {
+  const uid = window.webxdc.selfAddr;
+  window.webxdc.sendUpdate(
+    {
+      payload: { uid, cmd: LANG_CMD, lang },
+    },
+    "",
+  );
+}
+
+export function importGame(rawBackup: string): boolean {
+  let backup: Backup;
+  try {
+    backup = JSON.parse(rawBackup);
+  } catch (e) {
+    console.log(e);
+    return false;
+  }
+
   if (isValidBackup(backup)) {
     const uid = window.webxdc.selfAddr;
     window.webxdc.sendUpdate(
@@ -238,6 +264,7 @@ export function sendMonsterUpdate(
 export function initGame(
   sessionHook: (session: Session | null) => void,
   playerHook: (player: Player) => void,
+  welcomeHook: (state: boolean) => void,
 ) {
   window.webxdc
     .setUpdateListener(
@@ -250,6 +277,7 @@ export function initGame(
           uid: window.webxdc.selfAddr,
           cmd: INIT_CMD,
           sessionHook,
+          welcomeHook,
           playerHook,
         },
         serial: -1,
@@ -265,6 +293,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
       case INIT_CMD: {
         setSessionState = payload.sessionHook;
         setPlayerState = payload.playerHook;
+        setWelcomeCompleteState = payload.welcomeHook;
         setSessionState(getSession());
         setPlayerState(await getPlayer());
         return; // this command is not real update, abort
@@ -319,12 +348,19 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setEnergy(payload.energy, payload.time);
         const session = await createNewSession(payload.time, payload.mode);
         setSession(session);
-        setShowIntro();
         setSessionState(session);
+        break;
+      }
+      case LANG_CMD: {
+        setLearningLanguage(payload.lang);
+        initializeSentences(payload.lang);
+        setWelcomeCompleteState(true);
         break;
       }
       case IMPORT_CMD: {
         await importBackup(payload.backup);
+        initializeSentences(getLearningLanguage());
+        setWelcomeCompleteState(true);
         if (setPlayerState) setPlayerState(await getPlayer());
         setSessionState(getSession());
         break;

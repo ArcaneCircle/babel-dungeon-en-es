@@ -17,7 +17,6 @@ export async function exportBackup(): Promise<Backup> {
   return {
     version: VERSION,
     lang: BACKUP_CODE,
-    showIntro: localStorage.showIntro,
     monsters,
     session: localStorage.session,
     unseenIndex: localStorage.unseenIndex,
@@ -32,6 +31,7 @@ export async function exportBackup(): Promise<Backup> {
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
+    learningLanguage: localStorage.learningLanguage,
   };
 }
 
@@ -43,7 +43,6 @@ export async function importBackup(backup: Backup) {
   await db.monsters.bulkPut(
     backup.monsters.filter((mon) => mon.id < SENTENCES.length),
   );
-  localStorage.showIntro = backup.showIntro;
   localStorage.session = backup.session || "";
   localStorage.unseenIndex = backup.unseenIndex;
   // Player
@@ -57,6 +56,7 @@ export async function importBackup(backup: Backup) {
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
+  localStorage.learningLanguage = backup.learningLanguage || "LANG1";
 }
 
 export function isValidBackup(backup: Backup): boolean {
@@ -84,14 +84,6 @@ export function setMaxSerial(maxSerial: number) {
   localStorage.maxSerial = maxSerial;
 }
 
-export function getShowIntro(): number {
-  return parseInt(localStorage.showIntro || "1");
-}
-
-export function setShowIntro() {
-  localStorage.showIntro = 0;
-}
-
 export function getSFXEnabled(): boolean {
   return parseInt(localStorage.sfx || "1") === 1;
 }
@@ -106,6 +98,14 @@ export function getTTSEnabled(): boolean {
 
 export function setTTSEnabled(enabled: boolean) {
   localStorage.tts = enabled ? 1 : 0;
+}
+
+export function getLearningLanguage(): string {
+  return localStorage.learningLanguage || "";
+}
+
+export function setLearningLanguage(lang: string) {
+  localStorage.learningLanguage = lang;
 }
 
 export function getUnseenIndex(): number {

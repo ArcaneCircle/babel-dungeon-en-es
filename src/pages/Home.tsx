@@ -7,12 +7,11 @@ import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
 
 import { MAIN_COLOR, GOLDEN, BLUE, YELLOW } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
-import { getLastPlayed, getShowIntro } from "~/lib/storage";
+import { getLastPlayed } from "~/lib/storage";
 import { BORDER_COLOR, TEXT_TERTIARY } from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import NoEnergyModal from "~/components/modals/NoEnergyModal";
-import IntroModal from "~/components/modals/IntroModal";
 import GameModeModal from "~/components/modals/GameModeModal";
 import PixelatedProgressBar from "~/components/PixelatedProgressBar";
 import StatSection from "~/components/StatSection";
@@ -32,9 +31,7 @@ interface Props {
 }
 
 export default function Home({ player }: Props) {
-  const [modal, setModal] = useState(
-    (getShowIntro() ? "intro" : null) as "intro" | "noEnergy" | "play" | null,
-  );
+  const [modal, setModal] = useState(null as "noEnergy" | "play" | null);
   const today = new Date().setHours(0, 0, 0, 0);
   const lastPlayed = getLastPlayed();
   const epicStreak = player.streak >= 7;
@@ -60,9 +57,7 @@ export default function Home({ player }: Props) {
   return (
     <>
       <ModalContext.Provider value={{ isOpen: !!modal, setOpen }}>
-        {modal === "intro" ? (
-          <IntroModal />
-        ) : modal === "noEnergy" ? (
+        {modal === "noEnergy" ? (
           <NoEnergyModal />
         ) : modal === "play" ? (
           <GameModeModal
