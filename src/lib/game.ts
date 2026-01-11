@@ -118,7 +118,8 @@ export function importGame(rawBackup: string): boolean {
   let backup: Backup;
   try {
     backup = JSON.parse(rawBackup);
-  } catch (ex) {
+  } catch (e) {
+    console.log(e);
     return false;
   }
 
