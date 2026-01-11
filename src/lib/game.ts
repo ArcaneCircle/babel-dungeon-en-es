@@ -333,6 +333,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
       }
       case MONSTER_UPDATE_CMD: {
         const session = getSession();
+        let needsUpdate = false;
         for (const { monster, sessionId, xp } of payload.monsters) {
           if (session && sessionId === session.start) {
             const findMon = (m: Monster) =>
@@ -344,10 +345,13 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
             ) {
               updateMonster(monster, session);
               if (xp) session.xp += xp;
-              setSession(session);
+              needsUpdate = true;
             }
-            setSessionState(session);
           }
+        }
+        if (needsUpdate) {
+          setSession(session!);
+          setSessionState(session!);
         }
         break;
       }
