@@ -3,6 +3,7 @@ declare type Payload = { uid: string } & (
       cmd: "init";
       sessionHook: (session: Session | null) => void;
       playerHook: (player: Player) => void;
+      welcomeHook: (state: boolean) => void;
     }
   | {
       cmd: "mon-up";
@@ -23,6 +24,10 @@ declare type Payload = { uid: string } & (
   | {
       cmd: "import";
       backup: Backup;
+    }
+  | {
+      cmd: "lang";
+      lang: "LANG1" | "LANG2";
     }
 );
 
@@ -66,7 +71,6 @@ declare interface Player {
 declare interface Backup {
   version: number;
   lang: string;
-  showIntro: string;
   monsters: Monster[];
   session: string;
   unseenIndex: string;
@@ -79,6 +83,7 @@ declare interface Backup {
   lastPlayed: string;
   sfx: string;
   tts: string;
+  learningLanguage: string;
 }
 
 declare type GameMode = "easy" | "medium" | "hard";

@@ -2,9 +2,11 @@ import { useState, useMemo } from "react";
 
 import { MAX_LEVEL } from "~/lib/constants";
 import { initGame } from "~/lib/game";
+import { getLearningLanguage } from "~/lib/storage";
 
 import Home from "~/pages/Home";
 import GameSession from "~/pages/GameSession";
+import Welcome from "~/pages/Welcome";
 
 // @ts-ignore
 import "@fontsource/press-start-2p";
@@ -14,14 +16,19 @@ export default function App() {
   const [session, setSession] = useState(null as Session | null);
   const [forceSession, setForceSession] = useState(false);
   const [player, setPlayer] = useState(null as Player | null);
-  useMemo(() => initGame(setSession, setPlayer), []);
+  const [welcomeComplete, setWelcomeCompleteState] = useState(
+    !!getLearningLanguage(),
+  );
+  useMemo(() => initGame(setSession, setPlayer, setWelcomeCompleteState), []);
 
   const playing = session && session.pending.length + session.failed.length;
   const showXP = !player || player.lvl !== MAX_LEVEL;
 
   return (
     <>
-      {playing || (session && forceSession) ? (
+      {!welcomeComplete ? (
+        <Welcome />
+      ) : playing || (session && forceSession) ? (
         <GameSession
           session={session}
           setShowingResults={setForceSession}

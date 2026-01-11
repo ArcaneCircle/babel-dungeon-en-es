@@ -8,7 +8,6 @@ import { BG_SECONDARY } from "~/lib/theme";
 import { ModalContext } from "~/components/modals/Modal";
 import SettingsModal from "~/components/modals/SettingsModal";
 import CreditsModal from "~/components/modals/CreditsModal";
-import InvalidBackupModal from "~/components/modals/InvalidBackupModal";
 
 const containerStyle = {
   display: "flex",
@@ -24,9 +23,7 @@ const settingsStyle = {
 };
 
 export default function TitleBar() {
-  const [modal, setModal] = useState(
-    null as "settings" | "credits" | "invalidBackup" | null,
-  );
+  const [modal, setModal] = useState(null as "settings" | "credits" | null);
   const onShowSettings = useCallback(() => {
     if (getSFXEnabled()) clickSfx.play();
     setModal("settings");
@@ -40,15 +37,10 @@ export default function TitleBar() {
     <>
       <ModalContext.Provider value={{ isOpen: !!modal, setOpen }}>
         {modal === "settings" ? (
-          <SettingsModal
-            onImportBackupFailed={() => setModal("invalidBackup")}
-            onShowCredits={() => setModal("credits")}
-          />
+          <SettingsModal onShowCredits={() => setModal("credits")} />
         ) : modal === "credits" ? (
           <CreditsModal />
-        ) : (
-          <InvalidBackupModal />
-        )}
+        ) : null}
       </ModalContext.Provider>
       <div style={containerStyle}>
         <div style={{ paddingLeft: "1em" }}>Babel Dungeon</div>
