@@ -51,6 +51,7 @@ const pendingMonsterUpdates: Array<{
 // Initialize SENTENCES based on learning language
 initializeSentences(getLearningLanguage());
 
+// send batch of pending monster updates when user closes/minimizes the app
 function flushPendingMonsterUpdates() {
   if (pendingMonsterUpdates.length === 0) return;
 
@@ -250,6 +251,8 @@ export function sendMonsterUpdate(
   updateMonster(monster, session);
   session.xp += xp;
   if (!session.pending.length && !session.failed.length) {
+    // session finished, clear pending updates queue,
+    // session contains updated state
     pendingMonsterUpdates.length = 0;
 
     const update = {
@@ -306,6 +309,13 @@ export function initGame(
         max_serial: 0,
       });
     });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) {
+      flushPendingMonsterUpdates();
+    }
+  });
+  window.addEventListener("beforeunload", flushPendingMonsterUpdates);
 }
 
 async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
@@ -318,13 +328,6 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setWelcomeCompleteState = payload.welcomeHook;
         setSessionState(getSession());
         setPlayerState(await getPlayer());
-
-        document.addEventListener("visibilitychange", () => {
-          if (document.hidden) {
-            flushPendingMonsterUpdates();
-          }
-        });
-        window.addEventListener("beforeunload", flushPendingMonsterUpdates);
 
         return; // this command is not real update, abort
       }
