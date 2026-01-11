@@ -83,7 +83,7 @@ function Quiz({
   const showingResults = !!modal;
 
   useEffect(() => {
-    if (ttsEnabled && defaultMode && !showingResults) tts(sentence);
+    if (ttsEnabled && defaultMode && !showingResults && !document.hidden) tts(sentence);
   }, [monster, showingResults]);
 
   const pendingCount = session.failed.length + session.pending.length;

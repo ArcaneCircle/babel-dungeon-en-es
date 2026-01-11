@@ -7,7 +7,11 @@ declare type Payload = { uid: string } & (
     }
   | {
       cmd: "mon-up";
-      monster: Monster;
+      monsters: {
+        monster: Monster;
+        sessionId: number;
+        xp: number;
+      }[];
       sessionId: number;
       xp: number;
     }
