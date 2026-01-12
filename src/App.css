@@ -52,6 +52,11 @@ button * {
   cursor: pointer;
 }
 
+a {
+  cursor: pointer !important;
+  color: var(--text-primary);
+}
+
 .selectable,
 .selectable * {
   -webkit-user-select: text;
