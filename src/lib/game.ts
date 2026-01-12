@@ -326,7 +326,9 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setSessionState = payload.sessionHook;
         setPlayerState = payload.playerHook;
         setWelcomeCompleteState = payload.welcomeHook;
+        setWelcomeCompleteState(!!getLearningLanguage());
         setSessionState(getSession());
+        // player must be set last because it used to detect initialization
         setPlayerState(await getPlayer());
 
         return; // this command is not real update, abort
