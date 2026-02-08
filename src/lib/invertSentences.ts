@@ -45,6 +45,10 @@ export function initializeSentences(learningLang: string): void {
   if (learningLang === "LANG2") {
     const inverted = invertSentencesArray(SENTENCES);
     SENTENCES.length = 0;
-    SENTENCES.push(...inverted);
+    // Use a simple loop to avoid stack overflow with large arrays
+    // The spread operator with push has a limit on the number of arguments
+    for (let i = 0; i < inverted.length; i++) {
+      SENTENCES[i] = inverted[i];
+    }
   }
 }
