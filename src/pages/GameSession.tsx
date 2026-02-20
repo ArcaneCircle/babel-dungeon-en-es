@@ -183,7 +183,7 @@ function Quiz({
           <>
             <div
               style={{
-                padding: "0.5em 0.3em 0.3em 0.3em",
+                padding: "0.5em 1em",
                 marginBottom: "6em",
               }}
             >
@@ -216,7 +216,9 @@ function Quiz({
             >
               {show ? (
                 <>
-                  <p style={{ fontSize: "0.8em" }}>{_("Did you know it?")}</p>
+                  <p style={{ fontSize: "0.8em", padding: "0 1em" }}>
+                    {_("Did you know it?")}
+                  </p>
                   <div style={btnContainerStyle}>
                     <button
                       style={{ ...baseBtn, background: RED }}
