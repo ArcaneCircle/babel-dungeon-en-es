@@ -7,7 +7,7 @@ language pairs repositories.
 ## Creating new flavor
 
 - update `public/manifest.toml` and `public/icon.png`
-- replace `test-data.tsv` with the new game data
+- replace `*.tsv` with the new game data
 - update `LANG1_*` and `LANG2_*` in `src/lib/constants.ts`
 - if necessary add localization for the interface strings at
   `src/lib/langs` and update `src/lib/i18n.ts` accordingly.
