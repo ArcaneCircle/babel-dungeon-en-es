@@ -26,7 +26,7 @@ export default function CreditsModal(props: Props) {
           <p>{_("Sentences collection: tatoeba.org")}</p>
           <p>{_('UI Icons: "Pixel Icon" by HackerNoon')}</p>
           <p>{_("Sound effects by celestialghost8, Fupi and Dizzy Crow")}</p>
-          <p>{_("Translators: adb, sbkaf")}</p>
+          <p>{_("Translators: adb, sbkaf, mikelgs")}</p>
           <p>
             <a target="_blank" href={`${BASE_URL}-${LANG1_CODE}-${LANG2_CODE}`}>
               {_("Learn more...")}
