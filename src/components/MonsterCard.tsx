@@ -44,7 +44,7 @@ export default function MonsterCard({ monster, sentence, meanings }: Props) {
       {meanings ? (
         meanings
       ) : (
-        <div className="selectable" style={{ fontSize }}>
+        <div className="selectable" style={{ fontSize, lineHeight: "1.5em" }}>
           {sentence}
         </div>
       )}
