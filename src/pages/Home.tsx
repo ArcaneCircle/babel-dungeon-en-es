@@ -4,18 +4,25 @@ import PixelCrownSolid from "~icons/pixel/crown-solid";
 import PixelFireSolid from "~icons/pixel/fire-solid";
 import PixelBoltSolid from "~icons/pixel/bolt-solid";
 import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
+import PixelCogSolid from "~icons/pixel/cog-solid";
 
 import { MAIN_COLOR, GOLDEN, BLUE, YELLOW } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 import { getLastPlayed } from "~/lib/storage";
-import { BORDER_COLOR, TEXT_TERTIARY } from "~/lib/theme";
+import {
+  BORDER_COLOR,
+  TEXT_PRIMARY,
+  TEXT_TERTIARY,
+  BG_SECONDARY,
+} from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import NoEnergyModal from "~/components/modals/NoEnergyModal";
 import GameModeModal from "~/components/modals/GameModeModal";
+import SettingsModal from "~/components/modals/SettingsModal";
+import CreditsModal from "~/components/modals/CreditsModal";
 import PixelatedProgressBar from "~/components/PixelatedProgressBar";
 import StatSection from "~/components/StatSection";
-import TitleBar from "~/components/TitleBar";
 import MenuButton from "~/components/MenuButton";
 
 const card = {
@@ -26,12 +33,22 @@ const card = {
   padding: "10px",
 };
 
+const baseBtn = {
+  fontSize: "1.5em",
+  color: TEXT_PRIMARY,
+  backgroundColor: BG_SECONDARY,
+  padding: "0.6em 0.5em",
+  marginTop: "1em",
+};
+
 interface Props {
   player: Player;
 }
 
 export default function Home({ player }: Props) {
-  const [modal, setModal] = useState(null as "noEnergy" | "play" | null);
+  const [modal, setModal] = useState(
+    null as "noEnergy" | "play" | "settings" | "credits" | null,
+  );
   const today = new Date().setHours(0, 0, 0, 0);
   const lastPlayed = getLastPlayed();
   const epicStreak = player.streak >= 7;
@@ -48,6 +65,7 @@ export default function Home({ player }: Props) {
   const masteredRankColor = maxMasteredRank ? GOLDEN : undefined;
 
   const onPlay = useCallback(() => setModal("play"), []);
+  const onShowSettings = useCallback(() => setModal("settings"), []);
   const setOpen = useCallback(
     (show: boolean) => (show ? setModal(modal) : setModal(null)),
     [modal],
@@ -65,9 +83,13 @@ export default function Home({ player }: Props) {
             onNoEnergy={onNoEnergy}
             style={{ minWidth: "60vw" }}
           />
+        ) : modal === "settings" ? (
+          <SettingsModal onShowCredits={() => setModal("credits")} />
+        ) : modal === "credits" ? (
+          <CreditsModal />
         ) : null}
       </ModalContext.Provider>
-      <TitleBar />
+
       <div style={{ padding: "0.5em" }}>
         <div style={{ ...card, marginBottom: "1em" }}>
           <StatSection
@@ -168,14 +190,12 @@ export default function Home({ player }: Props) {
             />
           </div>
         </div>
+
+        <MenuButton style={baseBtn} onClick={onShowSettings}>
+          <PixelCogSolid />
+        </MenuButton>
         <MenuButton
-          style={{
-            fontSize: "1.5em",
-            color: "black",
-            background: MAIN_COLOR,
-            padding: "0.6em 0.5em",
-            marginTop: "1em",
-          }}
+          style={{ ...baseBtn, color: "black", background: MAIN_COLOR }}
           onClick={onPlay}
         >
           <PixelPlaySolid />
