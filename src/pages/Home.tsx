@@ -6,10 +6,13 @@ import PixelBoltSolid from "~icons/pixel/bolt-solid";
 import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
 import PixelCogSolid from "~icons/pixel/cog-solid";
 
-import { MAIN_COLOR, GOLDEN, BLUE, YELLOW } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 import { getLastPlayed } from "~/lib/storage";
 import {
+  MAIN_COLOR,
+  GOLDEN,
+  BLUE,
+  YELLOW,
   BORDER_COLOR,
   TEXT_PRIMARY,
   TEXT_TERTIARY,

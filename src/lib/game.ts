@@ -2,7 +2,6 @@ import { ReceivedStatusUpdate, SendingStatusUpdate } from "@webxdc/types";
 
 import { SENTENCES } from "~/lib/sentences";
 import { initializeSentences } from "~/lib/invertSentences";
-import { MAX_LEVEL, MASTERED_STREAK } from "~/lib/constants";
 import {
   db,
   getSession,
@@ -28,6 +27,10 @@ import {
   getLearningLanguage,
   setLearningLanguage,
 } from "~/lib/storage";
+
+export const MAX_LEVEL = 1000,
+  PLAY_ENERGY_COST = 10,
+  MASTERED_STREAK = 5;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",

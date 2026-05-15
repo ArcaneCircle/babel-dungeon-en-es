@@ -3,7 +3,7 @@ import PixelThumbsdownSolid from "~icons/pixel/thumbsdown-solid";
 import PixelFaceThinkingSolid from "~icons/pixel/face-thinking-solid";
 import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
 
-import { MAIN_COLOR, RED, GOLDEN } from "~/lib/constants";
+import { MAIN_COLOR, RED, GOLDEN } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 
 import BasicProgressBar from "./BasicProgressBar";

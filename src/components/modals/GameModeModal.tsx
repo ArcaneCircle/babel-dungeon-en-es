@@ -2,8 +2,8 @@ import { useCallback } from "react";
 import PixelBoltSolid from "~icons/pixel/bolt-solid";
 
 import { _ } from "~/lib/i18n";
-import { PLAY_ENERGY_COST, RED } from "~/lib/constants";
-import { startNewGame } from "~/lib/game";
+import { RED } from "~/lib/theme";
+import { PLAY_ENERGY_COST, startNewGame } from "~/lib/game";
 
 import ConfirmModal from "~/components/modals/ConfirmModal";
 import MenuPreference from "~/components/MenuPreference";

@@ -1,4 +1,4 @@
-import { MAIN_COLOR, RED } from "~/lib/constants";
+import { MAIN_COLOR, RED } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 import { formatTime } from "~/lib/dateutil";
 

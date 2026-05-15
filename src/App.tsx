@@ -1,7 +1,6 @@
 import { useState, useMemo } from "react";
 
-import { MAX_LEVEL } from "~/lib/constants";
-import { initGame } from "~/lib/game";
+import { MAX_LEVEL, initGame } from "~/lib/game";
 
 import Home from "~/pages/Home";
 import GameSession from "~/pages/GameSession";
