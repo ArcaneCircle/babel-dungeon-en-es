@@ -19,29 +19,22 @@ type Props = {
 };
 
 export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
-  const energyCost =
-    player.toReview > 0 ? PLAY_ENERGY_COST / 2 : PLAY_ENERGY_COST;
-  const energyCostMedium = Math.floor(energyCost / 2);
-  const energyCostHard = Math.floor(energyCost / 3);
+  const energyCostEasy = PLAY_ENERGY_COST;
+  const energyCostNormal =
+    player.toReview > 0 ? Math.floor(PLAY_ENERGY_COST / 2) : PLAY_ENERGY_COST;
   const playEasy = useCallback(() => {
-    if (!startNewGame("easy", energyCost)) {
+    if (!startNewGame("easy", energyCostEasy)) {
       onNoEnergy();
     }
-  }, [energyCost, onNoEnergy]);
-  const playMedium = useCallback(() => {
-    if (!startNewGame("medium", energyCostMedium)) {
+  }, [energyCostEasy, onNoEnergy]);
+  const playNormal = useCallback(() => {
+    if (!startNewGame("normal", energyCostNormal)) {
       onNoEnergy();
     }
-  }, [energyCostMedium, onNoEnergy]);
-  const playHard = useCallback(() => {
-    if (!startNewGame("hard", energyCostHard)) {
-      onNoEnergy();
-    }
-  }, [energyCostHard, onNoEnergy]);
+  }, [energyCostNormal, onNoEnergy]);
 
-  const easyColor = player.energy < energyCost ? RED : undefined;
-  const mediumColor = player.energy < energyCostMedium ? RED : undefined;
-  const hardColor = player.energy < energyCostHard ? RED : undefined;
+  const easyColor = player.energy < energyCostEasy ? RED : undefined;
+  const normalColor = player.energy < energyCostNormal ? RED : undefined;
 
   return (
     <ConfirmModal buttonText={_("Cancel")} {...props}>
@@ -50,40 +43,30 @@ export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
           {_("GAME MODE")}
           <hr />
         </div>
+        {player.toReview > 0 && (
+          <MenuItem>
+            <MenuPreference
+              name={_("Easy")}
+              state={
+                <div style={{ color: easyColor }}>
+                  {`${-energyCostEasy}`}
+                  <PixelBoltSolid />
+                </div>
+              }
+              onClick={playEasy}
+            />
+          </MenuItem>
+        )}
         <MenuItem>
           <MenuPreference
-            name={_("Easy")}
+            name={_("Normal")}
             state={
-              <div style={{ color: easyColor }}>
-                {`${-energyCost}`}
+              <div style={{ color: normalColor }}>
+                {`${-energyCostNormal}`}
                 <PixelBoltSolid />
               </div>
             }
-            onClick={playEasy}
-          />
-        </MenuItem>
-        <MenuItem>
-          <MenuPreference
-            name={_("Medium")}
-            state={
-              <div style={{ color: mediumColor }}>
-                {`${-energyCostMedium}`}
-                <PixelBoltSolid />
-              </div>
-            }
-            onClick={playMedium}
-          />
-        </MenuItem>
-        <MenuItem>
-          <MenuPreference
-            name={_("Hard")}
-            state={
-              <div style={{ color: hardColor }}>
-                {`${-energyCostHard}`}
-                <PixelBoltSolid />
-              </div>
-            }
-            onClick={playHard}
+            onClick={playNormal}
           />
         </MenuItem>
       </div>

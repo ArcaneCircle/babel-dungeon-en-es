@@ -75,7 +75,7 @@ function Quiz({
 
   const defaultMode =
     session.mode === "easy" ||
-    (session.mode === "medium" && monster.streak < MASTERED_STREAK);
+    (session.mode === "normal" && monster.streak < MASTERED_STREAK);
   const ttsEnabled = getTTSEnabled();
   const sfxEnabled = getSFXEnabled();
   const { sentence, meanings } = getCard(monster.id);

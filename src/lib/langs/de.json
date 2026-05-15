@@ -25,8 +25,7 @@
   "Mastered:": "Gemeistert:",
   "GAME MODE": "SPIELMODUS",
   "Easy": "Leicht",
-  "Medium": "Mittel",
-  "Hard": "Schwer",
+  "Normal": "Normal",
   "Cancel": "Abbrechen",
 
   "+{{x}}xp": "+{{x}}xp",
