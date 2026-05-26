@@ -10,22 +10,22 @@
     "build": "pnpm generate && vite build"
   },
   "devDependencies": {
-    "@iconify/json": "^2.2.351",
-    "@preact/preset-vite": "^2.10.1",
+    "@iconify/json": "^2.2.478",
+    "@preact/preset-vite": "^2.10.5",
     "@svgr/core": "^8.1.0",
     "@svgr/plugin-jsx": "^8.1.0",
-    "@types/react": "^19.1.2",
+    "@types/react": "^19.2.15",
     "@webxdc/types": "latest",
     "@webxdc/vite-plugins": "latest",
     "prettier": "latest",
     "typescript": "latest",
-    "unplugin-icons": "^22.1.0",
+    "unplugin-icons": "^22.5.0",
     "vite": "latest"
   },
   "dependencies": {
-    "@fontsource/press-start-2p": "^5.2.5",
-    "dexie": "^4.0.11",
+    "@fontsource/press-start-2p": "^5.2.7",
+    "dexie": "^4.4.2",
     "howler": "^2.2.4",
-    "preact": "^10.26.5"
+    "preact": "^10.29.2"
   }
 }
