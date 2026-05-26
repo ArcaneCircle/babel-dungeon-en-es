@@ -56,9 +56,7 @@ export async function importBackup(backup: Backup) {
   localStorage.energyTimestamp = backup.energyTimestamp;
   localStorage.studiedToday = backup.studiedToday;
   localStorage.lastPlayed = backup.lastPlayed;
-  localStorage.skillPoints = Number.isNaN(backup.skillPoints)
-    ? backup.level
-    : backup.skillPoints;
+  localStorage.skillPoints = backup.skillPoints || backup.level;
   localStorage.motivatedSkill = backup.motivatedSkill || "0";
   localStorage.maxEnergySkill = backup.maxEnergySkill || "0";
   // UI settings
