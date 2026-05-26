@@ -5,6 +5,7 @@ import PixelFireSolid from "~icons/pixel/fire-solid";
 import PixelBoltSolid from "~icons/pixel/bolt-solid";
 import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
 import PixelCogSolid from "~icons/pixel/cog-solid";
+import StarSolidIcon from "~icons/pixel/star-solid?width=1em&height=1em";
 
 import { _ } from "~/lib/i18n";
 import { getLastPlayed } from "~/lib/storage";
@@ -36,19 +37,26 @@ const card = {
   padding: "10px",
 };
 
+const btnIcon = { fontSize: "1.5em" };
+
 const baseBtn = {
-  fontSize: "1.5em",
   color: TEXT_PRIMARY,
   backgroundColor: BG_SECONDARY,
   padding: "0.6em 0.5em",
+};
+
+const secondaryBtnRow = {
+  display: "flex",
+  gap: "1em",
   marginTop: "1em",
 };
 
 interface Props {
   player: Player;
+  onShowSkills: () => void;
 }
 
-export default function Home({ player }: Props) {
+export default function Home({ player, onShowSkills }: Props) {
   const [modal, setModal] = useState(
     null as "noEnergy" | "play" | "settings" | "credits" | null,
   );
@@ -194,14 +202,25 @@ export default function Home({ player }: Props) {
           </div>
         </div>
 
-        <MenuButton style={baseBtn} onClick={onShowSettings}>
-          <PixelCogSolid />
-        </MenuButton>
+        <div style={secondaryBtnRow}>
+          <MenuButton style={baseBtn} onClick={onShowSettings}>
+            <PixelCogSolid style={btnIcon} />
+          </MenuButton>
+          <MenuButton style={baseBtn} onClick={onShowSkills}>
+            <StarSolidIcon style={btnIcon} />
+            {player.skillPoints > 0 && ` ${player.skillPoints}`}
+          </MenuButton>
+        </div>
         <MenuButton
-          style={{ ...baseBtn, color: "black", background: MAIN_COLOR }}
+          style={{
+            ...baseBtn,
+            marginTop: "1em",
+            color: "black",
+            background: MAIN_COLOR,
+          }}
           onClick={onPlay}
         >
-          <PixelPlaySolid />
+          <PixelPlaySolid style={btnIcon} />
         </MenuButton>
       </div>
     </>

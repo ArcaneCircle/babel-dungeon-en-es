@@ -44,7 +44,22 @@
 
   "You Leveled Up!": "¡Has subido de nivel!",
   "Now at level": "Ahora en el nivel",
-  "+{{x}} max. energy": "+{{x}} energía max.",
+  "Skill Points: +{{x}}": "Puntos de habilidad: +{{x}}",
+  "Energy restored: +{{x}}": "Energía restaurada: +{{x}}",
+
+  "SKILLS": "HABILIDADES",
+  "Spend skill points to upgrade your passive abilities.": "Gasta puntos de habilidad para mejorar tus habilidades pasivas.",
+  "Skill Points: {{x}}": "Puntos de habilidad: {{x}}",
+  "Current Level: {{x}}": "Nivel actual: {{x}}",
+  "MAXED": "AL MÁXIMO",
+  "Upgrade": "Mejorar",
+  "Back": "Atrás",
+  "Blessed": "Bendecido",
+  "When you level up, a surge of divine energy flows through your body instantly restoring {{base}}% of your maximum energy, plus an additional +{{inc}}% per upgrade.": "Al subir de nivel, una oleada de energía divina recorre tu cuerpo, restaurando al instante el {{base}}% de tu energía máxima, más un +{{inc}}% adicional por mejora.",
+  "{{x}}% of max. energy restored": "{{x}}% de la energía máxima será restaurado",
+  "Stamina": "Resistencia",
+  "Increases your maximum energy by +1 per upgrade.": "Aumenta tu energía máxima en +1 por mejora.",
+  "+{{x}} max. energy": "+{{x}} energía máxima",
 
   "LOW ENERGY!": "¡ENERGÍA BAJA!",
   "Your energy is too low.": "Tienes muy poca energía.",

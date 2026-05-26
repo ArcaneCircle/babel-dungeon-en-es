@@ -14,6 +14,12 @@ import {
   setXp,
   getEnergy,
   setEnergy,
+  getSkillPoints,
+  setSkillPoints,
+  getMotivatedSkillLevel,
+  setMotivatedSkillLevel,
+  getMaxEnergySkillLevel,
+  setMaxEnergySkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -28,13 +34,19 @@ import {
   setLearningLanguage,
 } from "~/lib/storage";
 
-export const MAX_LEVEL = 1000,
-  PLAY_ENERGY_COST = 10,
-  MASTERED_STREAK = 5;
+export const MAX_LEVEL = 1000;
+export const PLAY_ENERGY_COST = 10;
+export const MASTERED_STREAK = 5;
+export const MAX_ENERGY_SKILL_MAX_LEVEL = 50;
+export const BASE_MAX_ENERGY = 30;
+export const MOTIVATED_BASE_RESTORE_PERCENT = 50;
+export const MOTIVATED_SKILL_PER_LEVEL_PERCENT = 1;
+export const MOTIVATED_SKILL_MAX_LEVEL = 50;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
   NEW_CMD = "new",
+  SKILL_UP_CMD = "skill-up",
   LANG_CMD = "lang",
   FINISHED_CMD = "finished",
   IMPORT_CMD = "import";
@@ -78,7 +90,10 @@ const workerLoop = async () => {
   if (now - energyLastCheck >= 10000) {
     let { energy, time } = getEnergy();
     let changed = false;
-    while (energy < getMaxEnergy(getLevel()) && now - time >= sixMinutes) {
+    while (
+      energy < getMaxEnergy(getMaxEnergySkillLevel()) &&
+      now - time >= sixMinutes
+    ) {
       time += sixMinutes;
       setEnergy(++energy, time);
       changed = true;
@@ -111,14 +126,25 @@ export async function getPlayer(): Promise<Player> {
   const lvl = getLevel();
   const xp = getXp();
   const totalXp = lvl === MAX_LEVEL ? 0 : toNextLevelMediumFast(lvl);
-  const { energy } = getEnergy();
-  const maxEnergy = getMaxEnergy(lvl);
+
+  const energyState = getEnergy();
+  const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
+  const energy = Math.min(energyState.energy, maxEnergy);
+  if (energy !== energyState.energy) {
+    setEnergy(energy, energyState.time);
+  }
+
   return {
     lvl,
     xp,
     totalXp,
     energy,
     maxEnergy,
+    skillPoints: getSkillPoints(),
+    skills: {
+      motivated: getMotivatedSkillLevel(),
+      maxEnergy: getMaxEnergySkillLevel(),
+    },
     streak,
     studiedToday,
     toReview,
@@ -168,6 +194,32 @@ export function startNewGame(mode: GameMode, energyCost: number): boolean {
   window.webxdc.sendUpdate(
     {
       payload: { uid, cmd: NEW_CMD, time: Date.now(), energy, mode },
+    },
+    "",
+  );
+  return true;
+}
+
+export async function upgradeSkill(
+  skill: keyof PlayerSkills,
+): Promise<boolean> {
+  const skillPoints = getSkillPoints();
+  if (skillPoints < 1) return false;
+  const nextSkillPoints = skillPoints - 1;
+  const motivatedSkill = getMotivatedSkillLevel();
+  const maxEnergySkill = getMaxEnergySkillLevel();
+
+  const uid = window.webxdc.selfAddr;
+  window.webxdc.sendUpdate(
+    {
+      payload: {
+        uid,
+        cmd: SKILL_UP_CMD,
+        skill,
+        skillPoints: nextSkillPoints,
+        motivated: skill === "motivated" ? motivatedSkill + 1 : motivatedSkill,
+        maxEnergy: skill === "maxEnergy" ? maxEnergySkill + 1 : maxEnergySkill,
+      },
     },
     "",
   );
@@ -267,11 +319,12 @@ export function sendMonsterUpdate(
     } as SendingStatusUpdate<Payload>;
     const { level: newLevel } = increaseXp(session.xp);
     if (level < newLevel) {
-      const newEnergy = getMaxEnergy(newLevel) - getMaxEnergy(level);
+      const rewards = getLevelUpRewards(level, newLevel);
       modal = getResultsModal(session, monster.seen, {
         type: "levelUp",
-        newEnergy,
         newLevel,
+        restoredEnergy: rewards.restoredEnergy,
+        skillPoints: rewards.skillPoints,
       });
       update.info = `${window.webxdc.selfName} reached level ${newLevel} 🎉`;
     } else {
@@ -364,9 +417,12 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         const session = payload.session;
         await db.monsters.bulkPut(session.correct);
 
+        const currentLevel = getLevel();
         const { xp, level } = increaseXp(session.xp);
-        if (getLevel() < level) {
-          setEnergy(getMaxEnergy(level), Date.now());
+        if (currentLevel < level) {
+          const rewards = getLevelUpRewards(currentLevel, level);
+          if (rewards.restoredEnergy) setEnergy(rewards.nextEnergy, Date.now());
+          setSkillPoints(getSkillPoints() + rewards.skillPoints);
         }
         setXp(xp);
         setLevel(level);
@@ -393,6 +449,13 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         const session = await createNewSession(payload.time, payload.mode);
         setSession(session);
         setSessionState(session);
+        break;
+      }
+      case SKILL_UP_CMD: {
+        setSkillPoints(payload.skillPoints);
+        setMotivatedSkillLevel(payload.motivated);
+        setMaxEnergySkillLevel(payload.maxEnergy);
+        if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }
       case LANG_CMD: {
@@ -492,6 +555,30 @@ function increaseXp(xp: number): { xp: number; level: number } {
   return { level, xp };
 }
 
+function getLevelUpRewards(currentLevel: number, newLevel: number) {
+  const lvlCount = newLevel - currentLevel;
+  const { energy } = getEnergy();
+  const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
+  const missingEnergy = Math.max(0, maxEnergy - energy);
+  const restoredPercent = getMotivatedRestorePercent(getMotivatedSkillLevel());
+  const restoredEnergy = Math.min(
+    lvlCount * Math.floor((maxEnergy * restoredPercent) / 100),
+    missingEnergy,
+  );
+  return {
+    skillPoints: lvlCount,
+    restoredEnergy,
+    nextEnergy: energy + restoredEnergy,
+  };
+}
+
+export function getMotivatedRestorePercent(level: number): number {
+  return (
+    level &&
+    MOTIVATED_BASE_RESTORE_PERCENT + level * MOTIVATED_SKILL_PER_LEVEL_PERCENT
+  );
+}
+
 function toNextLevelMediumFast(level: number): number {
   if (level === 1) return 20;
   if (level === 2) return 34;
@@ -500,5 +587,5 @@ function toNextLevelMediumFast(level: number): number {
 }
 
 function getMaxEnergy(level: number): number {
-  return 30 + Math.floor(level / 5);
+  return BASE_MAX_ENERGY + level;
 }

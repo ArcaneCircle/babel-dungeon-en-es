@@ -3,7 +3,7 @@ import Dexie, { type EntityTable } from "dexie";
 import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
 import { SENTENCES } from "~/lib/sentences";
 
-const VERSION = 3;
+const VERSION = 4;
 
 export const db = new Dexie("gamedb") as Dexie & {
   monsters: EntityTable<Monster, "id">;
@@ -28,6 +28,9 @@ export async function exportBackup(): Promise<Backup> {
     energyTimestamp: localStorage.energyTimestamp,
     studiedToday: localStorage.studiedToday,
     lastPlayed: localStorage.lastPlayed,
+    skillPoints: localStorage.skillPoints,
+    motivatedSkill: localStorage.motivatedSkill,
+    maxEnergySkill: localStorage.maxEnergySkill,
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
@@ -53,6 +56,11 @@ export async function importBackup(backup: Backup) {
   localStorage.energyTimestamp = backup.energyTimestamp;
   localStorage.studiedToday = backup.studiedToday;
   localStorage.lastPlayed = backup.lastPlayed;
+  localStorage.skillPoints = Number.isNaN(backup.skillPoints)
+    ? backup.level
+    : backup.skillPoints;
+  localStorage.motivatedSkill = backup.motivatedSkill || "0";
+  localStorage.maxEnergySkill = backup.maxEnergySkill || "0";
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
@@ -150,6 +158,30 @@ export function getEnergy(): { energy: number; time: number } {
 export function setEnergy(energy: number, time: number) {
   localStorage.energy = energy;
   localStorage.energyTimestamp = time;
+}
+
+export function getSkillPoints(): number {
+  return parseInt(localStorage.skillPoints || "0");
+}
+
+export function setSkillPoints(skillPoints: number) {
+  localStorage.skillPoints = skillPoints.toString();
+}
+
+export function getMotivatedSkillLevel(): number {
+  return parseInt(localStorage.motivatedSkill || "0");
+}
+
+export function setMotivatedSkillLevel(level: number) {
+  localStorage.motivatedSkill = level.toString();
+}
+
+export function getMaxEnergySkillLevel(): number {
+  return parseInt(localStorage.maxEnergySkill || "0");
+}
+
+export function setMaxEnergySkillLevel(level: number) {
+  localStorage.maxEnergySkill = level.toString();
 }
 
 export function getStudiedToday(): number {

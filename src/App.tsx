@@ -4,6 +4,7 @@ import { MAX_LEVEL, initGame } from "~/lib/game";
 
 import Home from "~/pages/Home";
 import GameSession from "~/pages/GameSession";
+import Skills from "~/pages/Skills";
 import Welcome from "~/pages/Welcome";
 
 // @ts-ignore
@@ -15,6 +16,7 @@ export default function App() {
   const [forceSession, setForceSession] = useState(false);
   const [player, setPlayer] = useState(null as Player | null);
   const [welcomeComplete, setWelcomeCompleteState] = useState(false);
+  const [screen, setScreen] = useState("home" as "home" | "skills");
   useMemo(() => initGame(setSession, setPlayer, setWelcomeCompleteState), []);
 
   const playing = session && session.pending.length + session.failed.length;
@@ -33,8 +35,10 @@ export default function App() {
           setShowingResults={setForceSession}
           showXP={showXP}
         />
+      ) : screen === "skills" ? (
+        <Skills player={player} onBack={() => setScreen("home")} />
       ) : (
-        <Home player={player} />
+        <Home player={player} onShowSkills={() => setScreen("skills")} />
       )}
     </>
   );

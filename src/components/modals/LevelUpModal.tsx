@@ -13,11 +13,17 @@ const PartyPopperStyled = () => (
 
 type Props = {
   level: number;
-  energy: number;
+  restoredEnergy: number;
+  skillPoints: number;
   [key: string]: any;
 };
 
-export default function LevelUpModal({ level, energy, ...props }: Props) {
+export default function LevelUpModal({
+  level,
+  restoredEnergy,
+  skillPoints,
+  ...props
+}: Props) {
   useEffect(() => {
     if (getSFXEnabled()) {
       successSfx.stop(); // avoid mixed sounds
@@ -42,9 +48,15 @@ export default function LevelUpModal({ level, energy, ...props }: Props) {
           </span>
           <PartyPopperStyled />
         </div>
-        {energy > 0 && (
+        <div style={{ marginTop: "1em" }}>
+          {_("Skill Points: +{{x}}").replace("{{x}}", String(skillPoints))}
+        </div>
+        {restoredEnergy > 0 && (
           <div style={{ marginTop: "1em" }}>
-            {_("+{{x}} max. energy").replace("{{x}}", String(energy))}
+            {_("Energy restored: +{{x}}").replace(
+              "{{x}}",
+              String(restoredEnergy),
+            )}
           </div>
         )}
       </div>

@@ -166,7 +166,11 @@ function Quiz({
     <>
       <ModalContext.Provider value={{ isOpen: !!modal, setOpen }}>
         {modal === null ? null : modal.type === "levelUp" ? (
-          <LevelUpModal level={modal.newLevel} energy={modal.newEnergy} />
+          <LevelUpModal
+            level={modal.newLevel}
+            restoredEnergy={modal.restoredEnergy}
+            skillPoints={modal.skillPoints}
+          />
         ) : modal.type === "results" ? (
           <ResultsModal
             time={modal.time}

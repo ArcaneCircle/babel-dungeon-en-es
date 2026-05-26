@@ -44,7 +44,22 @@
 
   "You Leveled Up!": "Mailaz igo zara!",
   "Now at level": "Oraingo maila",
-  "+{{x}} max. energy": "+{{x}} energia max.",
+  "Skill Points: +{{x}}": "Trebetasun puntuak: +{{x}}",
+  "Energy restored: +{{x}}": "Energia berreskuratua: +{{x}}",
+
+  "SKILLS": "TREBETASUNAK",
+  "Spend skill points to upgrade your passive abilities.": "Gastatu trebetasun puntuak zure gaitasun pasiboak hobetzeko.",
+  "Skill Points: {{x}}": "Trebetasun puntuak: {{x}}",
+  "Current Level: {{x}}": "Uneko maila: {{x}}",
+  "MAXED": "MAXIMIZATUA",
+  "Upgrade": "Hobekuntza",
+  "Back": "Atzera",
+  "Blessed": "Bedeinkatua",
+  "When you level up, a surge of divine energy flows through your body instantly restoring {{base}}% of your maximum energy, plus an additional +{{inc}}% per upgrade.": "Maila igotzen zarenean, jainkozko energia eztanda bat igarotzen da zure gorputzean zehar, zure energia maximoaren %{{base}} berehala leheneratuz, gehi %{{inc}} gehigarri bat hobekuntza bakoitzeko.",
+  "{{x}}% of max. energy restored": "Energia maximoaren %{{x}} berreskuratua",
+  "Stamina": "Erresistentzia",
+  "Increases your maximum energy by +1 per upgrade.": "Zure energia maximoa +1 handitzen du hobekuntza bakoitzeko.",
+  "+{{x}} max. energy": "+{{x}} energia maximoa",
 
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",
   "Your energy is too low.": "Energia gutxiegi duzu.",

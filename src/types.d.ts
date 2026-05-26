@@ -33,6 +33,13 @@ declare type Payload = { uid: string } & (
       cmd: "lang";
       lang: "LANG1" | "LANG2";
     }
+  | {
+      cmd: "skill-up";
+      skill: keyof PlayerSkills;
+      skillPoints: number;
+      motivated: number;
+      maxEnergy: number;
+    }
 );
 
 declare interface Monster {
@@ -64,12 +71,19 @@ declare interface Player {
   totalXp: number;
   energy: number;
   maxEnergy: number;
+  skillPoints: number;
+  skills: PlayerSkills;
   streak: number;
   studiedToday: number; // number of sentences studied today
   toReview: number;
   seen: number; // number of sentences seen
   mastered: number; // number of sentences mastered
   total: number; // total number of sentences
+}
+
+declare interface PlayerSkills {
+  motivated: number;
+  maxEnergy: number;
 }
 
 declare interface Backup {
@@ -85,6 +99,9 @@ declare interface Backup {
   energyTimestamp: string;
   studiedToday: string;
   lastPlayed: string;
+  skillPoints: string;
+  motivatedSkill: string;
+  maxEnergySkill: string;
   sfx: string;
   tts: string;
   learningLanguage: string;
@@ -96,7 +113,8 @@ declare type ModalPayload =
   | {
       type: "levelUp";
       newLevel: number;
-      newEnergy: number;
+      restoredEnergy: number;
+      skillPoints: number;
     }
   | {
       type: "results";
