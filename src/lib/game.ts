@@ -20,6 +20,8 @@ import {
   setMotivatedSkillLevel,
   getMaxEnergySkillLevel,
   setMaxEnergySkillLevel,
+  getBerserkerSkillLevel,
+  setBerserkerSkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -42,6 +44,7 @@ export const BASE_MAX_ENERGY = 30;
 export const MOTIVATED_BASE_RESTORE_PERCENT = 50;
 export const MOTIVATED_SKILL_PER_LEVEL_PERCENT = 1;
 export const MOTIVATED_SKILL_MAX_LEVEL = 50;
+export const BERSERKER_SKILL_MAX_LEVEL = 50;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
@@ -144,6 +147,7 @@ export async function getPlayer(): Promise<Player> {
     skills: {
       motivated: getMotivatedSkillLevel(),
       maxEnergy: getMaxEnergySkillLevel(),
+      berserker: getBerserkerSkillLevel(),
     },
     streak,
     studiedToday,
@@ -208,6 +212,7 @@ export async function upgradeSkill(
   const nextSkillPoints = skillPoints - 1;
   const motivatedSkill = getMotivatedSkillLevel();
   const maxEnergySkill = getMaxEnergySkillLevel();
+  const berserkerSkill = getBerserkerSkillLevel();
 
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
@@ -219,6 +224,7 @@ export async function upgradeSkill(
         skillPoints: nextSkillPoints,
         motivated: skill === "motivated" ? motivatedSkill + 1 : motivatedSkill,
         maxEnergy: skill === "maxEnergy" ? maxEnergySkill + 1 : maxEnergySkill,
+        berserker: skill === "berserker" ? berserkerSkill + 1 : berserkerSkill,
       },
     },
     "",
@@ -455,6 +461,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setSkillPoints(payload.skillPoints);
         setMotivatedSkillLevel(payload.motivated);
         setMaxEnergySkillLevel(payload.maxEnergy);
+        setBerserkerSkillLevel(payload.berserker);
         if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }
@@ -577,6 +584,40 @@ export function getMotivatedRestorePercent(level: number): number {
     level &&
     MOTIVATED_BASE_RESTORE_PERCENT + level * MOTIVATED_SKILL_PER_LEVEL_PERCENT
   );
+}
+
+function getBerserkerReductionPerPoint(toReview: number): number {
+  if (toReview >= 500) return 2;
+  if (toReview >= 400) return 1.6;
+  if (toReview >= 300) return 1.2;
+  if (toReview >= 200) return 0.8;
+  if (toReview >= 100) return 0.4;
+  return 0;
+}
+
+export function getBerserkerReductionPercent(
+  mode: GameMode,
+  toReview: number,
+  berserkerLevel: number,
+): number {
+  if (!berserkerLevel) return 0;
+
+  const reductionPerPoint = getBerserkerReductionPerPoint(toReview);
+  const modeMultiplier = mode === "easy" ? 0.5 : 1;
+  return berserkerLevel * reductionPerPoint * modeMultiplier;
+}
+
+export function getPlayEnergyCost(
+  mode: GameMode,
+  toReview: number,
+  berserkerLevel: number,
+): number {
+  const totalReductionPercent = getBerserkerReductionPercent(
+    mode,
+    toReview,
+    berserkerLevel,
+  );
+  return Math.ceil(PLAY_ENERGY_COST * (1 - totalReductionPercent / 100));
 }
 
 function toNextLevelMediumFast(level: number): number {

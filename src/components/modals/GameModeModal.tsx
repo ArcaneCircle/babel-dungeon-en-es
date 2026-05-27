@@ -3,7 +3,7 @@ import PixelBoltSolid from "~icons/pixel/bolt-solid";
 
 import { _ } from "~/lib/i18n";
 import { RED } from "~/lib/theme";
-import { PLAY_ENERGY_COST, startNewGame } from "~/lib/game";
+import { getPlayEnergyCost, startNewGame } from "~/lib/game";
 
 import ConfirmModal from "~/components/modals/ConfirmModal";
 import MenuPreference from "~/components/MenuPreference";
@@ -19,9 +19,16 @@ type Props = {
 };
 
 export default function GameModeModal({ player, onNoEnergy, ...props }: Props) {
-  const energyCostEasy = PLAY_ENERGY_COST;
-  const energyCostNormal =
-    player.toReview > 0 ? Math.floor(PLAY_ENERGY_COST / 2) : PLAY_ENERGY_COST;
+  const energyCostEasy = getPlayEnergyCost(
+    "easy",
+    player.toReview,
+    player.skills.berserker,
+  );
+  const energyCostNormal = getPlayEnergyCost(
+    "normal",
+    player.toReview,
+    player.skills.berserker,
+  );
   const playEasy = useCallback(() => {
     if (!startNewGame("easy", energyCostEasy)) {
       onNoEnergy();
