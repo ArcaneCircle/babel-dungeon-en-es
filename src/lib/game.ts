@@ -604,7 +604,7 @@ export function getBerserkerReductionPercent(
 
   const reductionPerPoint = getBerserkerReductionPerPoint(toReview);
   const modeMultiplier = mode === "easy" ? 0.5 : 1;
-  return berserkerLevel * reductionPerPoint * modeMultiplier;
+  return Math.round(berserkerLevel * reductionPerPoint * modeMultiplier * 10) / 10;
 }
 
 export function getPlayEnergyCost(
