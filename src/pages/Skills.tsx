@@ -91,7 +91,7 @@ export default function Skills({ player, onBack }: Props) {
         <div style={{ fontSize: "1.2em", color: MAIN_COLOR }}>
           {_("SKILLS")}
         </div>
-        <div style={{ marginTop: "1em" }}>
+        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
           {_("Spend skill points to upgrade your passive abilities.")}
         </div>
         <div style={{ marginTop: "1em", color: BLUE }}>
