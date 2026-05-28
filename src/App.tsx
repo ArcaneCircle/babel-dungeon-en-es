@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 
-import { MAX_LEVEL, initGame } from "~/lib/game";
+import { initGame } from "~/lib/game";
 
 import Home from "~/pages/Home";
 import GameSession from "~/pages/GameSession";
@@ -20,7 +20,6 @@ export default function App() {
   useMemo(() => initGame(setSession, setPlayer, setWelcomeCompleteState), []);
 
   const playing = session && session.pending.length + session.failed.length;
-  const showXP = !player || player.lvl !== MAX_LEVEL;
 
   // don't render anything if initialization hasn't finished
   if (!player) return;
@@ -33,7 +32,7 @@ export default function App() {
         <GameSession
           session={session}
           setShowingResults={setForceSession}
-          showXP={showXP}
+          player={player}
         />
       ) : screen === "skills" ? (
         <Skills player={player} onBack={() => setScreen("home")} />

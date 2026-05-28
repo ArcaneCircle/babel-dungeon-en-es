@@ -9,6 +9,7 @@ import {
   MOTIVATED_SKILL_MAX_LEVEL,
   MAX_ENERGY_SKILL_MAX_LEVEL,
   BERSERKER_SKILL_MAX_LEVEL,
+  GOLDEN_TOUCH_SKILL_MAX_LEVEL,
   getBerserkerReductionPercent,
 } from "~/lib/game";
 import {
@@ -42,12 +43,15 @@ export default function Skills({ player, onBack }: Props) {
   const motivatedPercent = getMotivatedRestorePercent(motivatedLevel);
   const maxEnergyLevel = player.skills.maxEnergy;
   const berserkerLevel = player.skills.berserker;
+  const goldenTouchLevel = player.skills.goldenTouch;
   const canUpgradeMotivated =
     player.skillPoints > 0 && motivatedLevel < MOTIVATED_SKILL_MAX_LEVEL;
   const canUpgradeMaxEnergy =
     player.skillPoints > 0 && maxEnergyLevel < MAX_ENERGY_SKILL_MAX_LEVEL;
   const canUpgradeBerserker =
     player.skillPoints > 0 && berserkerLevel < BERSERKER_SKILL_MAX_LEVEL;
+  const canUpgradeGoldenTouch =
+    player.skillPoints > 0 && goldenTouchLevel < GOLDEN_TOUCH_SKILL_MAX_LEVEL;
 
   const onUpgradeMotivated = useCallback(async () => {
     await upgradeSkill("motivated");
@@ -57,6 +61,9 @@ export default function Skills({ player, onBack }: Props) {
   }, []);
   const onUpgradeBerserker = useCallback(async () => {
     await upgradeSkill("berserker");
+  }, []);
+  const onUpgradeGoldenTouch = useCallback(async () => {
+    await upgradeSkill("goldenTouch");
   }, []);
 
   const currMotivated = _("{{x}}% of max. energy restored").replace(
@@ -84,6 +91,10 @@ export default function Skills({ player, onBack }: Props) {
     .replace("{{easy}}", String(currBerserkerEasy))
     .replace("{{normal}}", String(currBerserkerNormal))
     .replace("{{x}}", String(player.toReview));
+
+  const currGoldenTouch = _(
+    "Monster's level increased by +{{x}} when the golden button is used",
+  ).replace("{{x}}", String(5 + goldenTouchLevel));
 
   return (
     <div style={{ padding: "0.5em" }}>
@@ -218,6 +229,46 @@ export default function Skills({ player, onBack }: Props) {
           }}
         >
           {berserkerLevel >= BERSERKER_SKILL_MAX_LEVEL
+            ? _("MAXED")
+            : _("Upgrade")}
+        </MenuButton>
+      </div>
+
+      <div style={card}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "1em",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
+            {_("Golden Touch")}
+          </div>
+          <div>
+            {_("LEVEL")} {goldenTouchLevel}/{GOLDEN_TOUCH_SKILL_MAX_LEVEL}
+          </div>
+        </div>
+        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
+          {_(
+            "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.",
+          )}
+        </div>
+        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
+          {_("Current Level: {{x}}").replace("{{x}}", currGoldenTouch)}
+        </div>
+        <MenuButton
+          disabled={!canUpgradeGoldenTouch}
+          onClick={onUpgradeGoldenTouch}
+          style={{
+            marginTop: "1.5em",
+            color: canUpgradeGoldenTouch ? "black" : TEXT_PRIMARY,
+            background: canUpgradeGoldenTouch ? MAIN_COLOR : BG_TERTIARY,
+            opacity: canUpgradeGoldenTouch ? 1 : 0.7,
+          }}
+        >
+          {goldenTouchLevel >= GOLDEN_TOUCH_SKILL_MAX_LEVEL
             ? _("MAXED")
             : _("Upgrade")}
         </MenuButton>

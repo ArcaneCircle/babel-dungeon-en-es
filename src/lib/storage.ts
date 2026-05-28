@@ -32,6 +32,7 @@ export async function exportBackup(): Promise<Backup> {
     motivatedSkill: localStorage.motivatedSkill,
     maxEnergySkill: localStorage.maxEnergySkill,
     berserkerSkill: localStorage.berserkerSkill,
+    goldenTouchSkill: localStorage.goldenTouchSkill,
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
@@ -61,6 +62,7 @@ export async function importBackup(backup: Backup) {
   localStorage.motivatedSkill = backup.motivatedSkill || "0";
   localStorage.maxEnergySkill = backup.maxEnergySkill || "0";
   localStorage.berserkerSkill = backup.berserkerSkill || "0";
+  localStorage.goldenTouchSkill = backup.goldenTouchSkill || "0";
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
@@ -190,6 +192,14 @@ export function getBerserkerSkillLevel(): number {
 
 export function setBerserkerSkillLevel(level: number) {
   localStorage.berserkerSkill = level.toString();
+}
+
+export function getGoldenTouchSkillLevel(): number {
+  return parseInt(localStorage.goldenTouchSkill || "0");
+}
+
+export function setGoldenTouchSkillLevel(level: number) {
+  localStorage.goldenTouchSkill = level.toString();
 }
 
 export function getStudiedToday(): number {

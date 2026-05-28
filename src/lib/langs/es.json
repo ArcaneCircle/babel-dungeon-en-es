@@ -64,6 +64,9 @@
   "Having so much pending sentences to review starts to put your mind into overdrive. The heavier the workload, the less energy each review session consumes. Reduces energy cost based on pending reviews: 100+ (-0.4%), 200+ (-0.8%), 300+ (-1.2%), 400+ (-1.6%), 500+ (-2%) per upgrade.": "Tener tantas oraciones pendientes de revisar hace que tu mente se ponga a toda máquina. Cuanto mayor sea la carga de trabajo, menos energía consumirá cada sesión de repaso. Reduce el coste de energía en función de las revisiones pendientes: 100+ (-0,4%), 200+ (-0,8%), 300+ (-1,2%), 400+ (-1,6%), 500+ (-2%) por mejora.",
   "In easy mode the reduction is only half as effective.": "En el modo fácil, la reducción es solo la mitad de efectiva.",
   "-{{easy}}% easy / -{{normal}}% normal with {{x}} to review": "-{{easy}}% fácil / -{{normal}}% normal con {{x}} pendientes de revisar",
+  "Golden Touch": "Toque dorado",
+  "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Al pulsar el botón dorado, el nivel del monstruo aumenta más de lo habitual: +1 nivel por mejora.",
+  "Monster's level increased by +{{x}} when the golden button is used": "El nivel del monstruo aumenta en +{{x}} al usar el botón dorado",
 
   "LOW ENERGY!": "¡ENERGÍA BAJA!",
   "Your energy is too low.": "Tienes muy poca energía.",

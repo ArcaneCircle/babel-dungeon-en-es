@@ -64,6 +64,9 @@
   "Having so much pending sentences to review starts to put your mind into overdrive. The heavier the workload, the less energy each review session consumes. Reduces energy cost based on pending reviews: 100+ (-0.4%), 200+ (-0.8%), 300+ (-1.2%), 400+ (-1.6%), 500+ (-2%) per upgrade.": "Berrikusteko hainbeste esaldi izateak zure burua gehiegi bizkortzen hasten da. Lan-karga zenbat eta handiagoa izan, orduan eta energia gutxiago kontsumitzen du berrikuspen-saio bakoitzak. Energia-kostua murrizten du berrikuspen zain daudenen arabera: 100+ (-% 0,4), 200+ (-% 0,8), 300+ (-% 1,2), 400+ (-% 1,6), 500+ (-% 2) hobekuntza bakoitzeko.",
   "In easy mode the reduction is only half as effective.": "Modu errazean, murrizketa erdira baino ez da eraginkorra.",
   "-{{easy}}% easy / -{{normal}}% normal with {{x}} to review": "-{{easy}}% erraza / -{{normal}}% normala {{x}} berrikustekoarekin",
+  "Golden Touch": "Urrezko Ukitua",
+  "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Urrezko botoia sakatzean munstroaren maila ohi baino gehiago igotzen da, +1 maila hobekuntza bakoitzeko.",
+  "Monster's level increased by +{{x}} when the golden button is used": "Munstroaren maila +{{x}} handitzen da urrezko botoia erabiltzean",
 
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",
   "Your energy is too low.": "Energia gutxiegi duzu.",

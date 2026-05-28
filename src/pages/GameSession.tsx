@@ -6,7 +6,12 @@ import PixelCrownSolid from "~icons/pixel/crown-solid";
 import { _ } from "~/lib/i18n";
 import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
 import { successSfx, errorSfx, clickSfx } from "~/lib/sounds";
-import { MASTERED_STREAK, getCard, sendMonsterUpdate } from "~/lib/game";
+import {
+  MAX_LEVEL,
+  MASTERED_STREAK,
+  getCard,
+  sendMonsterUpdate,
+} from "~/lib/game";
 import { tts } from "~/lib/tts";
 import { MAIN_COLOR, RED, GOLDEN, BG_PRIMARY, TEXT_PRIMARY } from "~/lib/theme";
 
@@ -39,14 +44,14 @@ const statusBarStyle = {
 
 interface Props {
   setShowingResults: (showing: boolean) => void;
-  showXP: boolean;
   session: Session;
+  player: Player;
 }
 
 export default function GameSession({
   setShowingResults,
-  showXP,
   session,
+  player,
 }: Props) {
   const monster =
     session.pending[0] ||
@@ -55,8 +60,8 @@ export default function GameSession({
   return (
     <Quiz
       key={monster.id}
-      showXP={showXP}
       session={session}
+      player={player}
       monster={monster}
       setShowingResults={setShowingResults}
     />
@@ -65,8 +70,8 @@ export default function GameSession({
 
 function Quiz({
   setShowingResults,
-  showXP,
   session,
+  player,
   monster,
 }: Props & { monster: Monster }) {
   const [show, setShow] = useState(false);
@@ -104,15 +109,18 @@ function Quiz({
     setShowingResults(!!mod);
     setModal(mod);
   }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount]);
+
+  const goldenTouch = player ? player.skills.goldenTouch : 0;
   const onMastered = useCallback(() => {
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
       successSfx.play();
     }
-    const mod = sendMonsterUpdate(monster, 5);
+    const mod = sendMonsterUpdate(monster, 5 + player.skills.goldenTouch);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount]);
+  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount, goldenTouch]);
+
   const onShow = useCallback(() => {
     if (ttsEnabled && !defaultMode) {
       tts(sentence);
@@ -129,6 +137,7 @@ function Quiz({
 
   const sentenceSize = sentence.length > 80 ? "0.9em" : undefined;
 
+  const showXP = !player || player.lvl !== MAX_LEVEL;
   const statusBarM = useMemo(
     () => (
       <StatusBar session={session} showXP={showXP} style={statusBarStyle} />

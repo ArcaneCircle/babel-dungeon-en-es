@@ -22,6 +22,8 @@ import {
   setMaxEnergySkillLevel,
   getBerserkerSkillLevel,
   setBerserkerSkillLevel,
+  getGoldenTouchSkillLevel,
+  setGoldenTouchSkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -45,6 +47,7 @@ export const MOTIVATED_BASE_RESTORE_PERCENT = 50;
 export const MOTIVATED_SKILL_PER_LEVEL_PERCENT = 1;
 export const MOTIVATED_SKILL_MAX_LEVEL = 50;
 export const BERSERKER_SKILL_MAX_LEVEL = 50;
+export const GOLDEN_TOUCH_SKILL_MAX_LEVEL = 50;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
@@ -148,6 +151,7 @@ export async function getPlayer(): Promise<Player> {
       motivated: getMotivatedSkillLevel(),
       maxEnergy: getMaxEnergySkillLevel(),
       berserker: getBerserkerSkillLevel(),
+      goldenTouch: getGoldenTouchSkillLevel(),
     },
     streak,
     studiedToday,
@@ -213,6 +217,7 @@ export async function upgradeSkill(
   const motivatedSkill = getMotivatedSkillLevel();
   const maxEnergySkill = getMaxEnergySkillLevel();
   const berserkerSkill = getBerserkerSkillLevel();
+  const goldenTouchSkill = getGoldenTouchSkillLevel();
 
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
@@ -225,6 +230,8 @@ export async function upgradeSkill(
         motivated: skill === "motivated" ? motivatedSkill + 1 : motivatedSkill,
         maxEnergy: skill === "maxEnergy" ? maxEnergySkill + 1 : maxEnergySkill,
         berserker: skill === "berserker" ? berserkerSkill + 1 : berserkerSkill,
+        goldenTouch:
+          skill === "goldenTouch" ? goldenTouchSkill + 1 : goldenTouchSkill,
       },
     },
     "",
@@ -462,6 +469,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setMotivatedSkillLevel(payload.motivated);
         setMaxEnergySkillLevel(payload.maxEnergy);
         setBerserkerSkillLevel(payload.berserker);
+        setGoldenTouchSkillLevel(payload.goldenTouch);
         if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }
@@ -604,7 +612,9 @@ export function getBerserkerReductionPercent(
 
   const reductionPerPoint = getBerserkerReductionPerPoint(toReview);
   const modeMultiplier = mode === "easy" ? 0.5 : 1;
-  return Math.round(berserkerLevel * reductionPerPoint * modeMultiplier * 10) / 10;
+  return (
+    Math.round(berserkerLevel * reductionPerPoint * modeMultiplier * 10) / 10
+  );
 }
 
 export function getPlayEnergyCost(
