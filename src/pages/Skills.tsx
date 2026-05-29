@@ -47,82 +47,16 @@ interface Props {
 }
 
 export default function Skills({ player, onBack }: Props) {
-  const motivatedLevel = player.skills.motivated;
-  const motivatedPercent = getMotivatedRestorePercent(motivatedLevel);
-  const maxEnergyLevel = player.skills.maxEnergy;
-  const berserkerLevel = player.skills.berserker;
-  const goldenTouchLevel = player.skills.goldenTouch;
-  const lifeStealLevel = player.skills.lifeSteal;
-  const criticalHitLevel = player.skills.criticalHit;
-  const canUpgradeMotivated =
-    player.skillPoints > 0 && motivatedLevel < MOTIVATED_SKILL_MAX_LEVEL;
-  const canUpgradeMaxEnergy =
-    player.skillPoints > 0 && maxEnergyLevel < MAX_ENERGY_SKILL_MAX_LEVEL;
-  const canUpgradeBerserker =
-    player.skillPoints > 0 && berserkerLevel < BERSERKER_SKILL_MAX_LEVEL;
-  const canUpgradeGoldenTouch =
-    player.skillPoints > 0 && goldenTouchLevel < GOLDEN_TOUCH_SKILL_MAX_LEVEL;
-  const canUpgradeLifeSteal =
-    player.skillPoints > 0 && lifeStealLevel < LIFE_STEAL_SKILL_MAX_LEVEL;
-  const canUpgradeCriticalHit =
-    player.skillPoints > 0 && criticalHitLevel < CRITICAL_HIT_SKILL_MAX_LEVEL;
-
-  const onUpgradeMotivated = useCallback(async () => {
-    await upgradeSkill("motivated");
-  }, []);
-  const onUpgradeMaxEnergy = useCallback(async () => {
-    await upgradeSkill("maxEnergy");
-  }, []);
-  const onUpgradeBerserker = useCallback(async () => {
-    await upgradeSkill("berserker");
-  }, []);
-  const onUpgradeGoldenTouch = useCallback(async () => {
-    await upgradeSkill("goldenTouch");
-  }, []);
-  const onUpgradeLifeSteal = useCallback(async () => {
-    await upgradeSkill("lifeSteal");
-  }, []);
-  const onUpgradeCriticalHit = useCallback(async () => {
-    await upgradeSkill("criticalHit");
-  }, []);
-
-  const currMotivated = _("{{x}}% of max. energy restored").replace(
-    "{{x}}",
-    String(motivatedPercent),
-  );
-  const currMaxEnergy = _("+{{x}} max. energy").replace(
-    "{{x}}",
-    `${maxEnergyLevel * 10}`,
-  );
-
   const currBerserkerEasy = getBerserkerReductionPercent(
     "easy",
     player.toReview,
-    berserkerLevel,
+    player.skills.berserker,
   );
   const currBerserkerNormal = getBerserkerReductionPercent(
     "normal",
     player.toReview,
-    berserkerLevel,
+    player.skills.berserker,
   );
-  const currBerserker = _(
-    "-{{easy}}% easy / -{{normal}}% normal with {{x}} to review",
-  )
-    .replace("{{easy}}", String(currBerserkerEasy))
-    .replace("{{normal}}", String(currBerserkerNormal))
-    .replace("{{x}}", String(player.toReview));
-
-  const currGoldenTouch = _(
-    "Monster's level increased by +{{x}} when the golden button is used",
-  ).replace("{{x}}", String(5 + goldenTouchLevel));
-
-  const currLifeSteal = _(
-    "{{x}}% chance of +5 energy on correct answer",
-  ).replace("{{x}}", String(getLifeStealChance(lifeStealLevel)));
-
-  const currCriticalHit = _(
-    "{{x}}% chance of x1.5 XP on correct answer",
-  ).replace("{{x}}", String(getCriticalHitChance(criticalHitLevel)));
 
   return (
     <div style={{ padding: "0.5em" }}>
@@ -141,250 +75,102 @@ export default function Skills({ player, onBack }: Props) {
         </div>
       </div>
 
-      <div style={card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1em",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
-            {_("Blessed")}
-          </div>
-          <div>
-            {_("LEVEL")} {motivatedLevel}/{MOTIVATED_SKILL_MAX_LEVEL}
-          </div>
-        </div>
-        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_(
-            "When you level up, a surge of divine energy flows through your body instantly restoring {{base}}% of your maximum energy, plus an additional +{{inc}}% per upgrade.",
-          )
-            .replace("{{base}}", String(MOTIVATED_BASE_RESTORE_PERCENT))
-            .replace("{{inc}}", String(MOTIVATED_SKILL_PER_LEVEL_PERCENT))}
-        </div>
-        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-          {_("Current Level: {{x}}").replace("{{x}}", currMotivated)}
-        </div>
-        <MenuButton
-          disabled={!canUpgradeMotivated}
-          onClick={onUpgradeMotivated}
-          style={{
-            marginTop: "1.5em",
-            color: canUpgradeMotivated ? "black" : TEXT_PRIMARY,
-            background: canUpgradeMotivated ? MAIN_COLOR : BG_TERTIARY,
-            opacity: canUpgradeMotivated ? 1 : 0.7,
-          }}
-        >
-          {motivatedLevel >= MOTIVATED_SKILL_MAX_LEVEL
-            ? _("MAXED")
-            : _("Upgrade")}
-        </MenuButton>
-      </div>
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"motivated"}
+        skillName={_("Blessed")}
+        skillLevel={player.skills.motivated}
+        skillMaxLevel={MOTIVATED_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "When you level up, a surge of divine energy flows through your body instantly restoring {{base}}% of your maximum energy, plus an additional +{{inc}}% per upgrade.",
+        )
+          .replace("{{base}}", String(MOTIVATED_BASE_RESTORE_PERCENT))
+          .replace("{{inc}}", String(MOTIVATED_SKILL_PER_LEVEL_PERCENT))}
+        skillSummary={_("{{x}}% of max. energy restored").replace(
+          "{{x}}",
+          String(getMotivatedRestorePercent(player.skills.motivated)),
+        )}
+      />
 
-      <div style={card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1em",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
-            {_("Stamina")}
-          </div>
-          <div>
-            {_("LEVEL")} {maxEnergyLevel}/{MAX_ENERGY_SKILL_MAX_LEVEL}
-          </div>
-        </div>
-        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_("Increases your maximum energy by +10 per upgrade.")}
-        </div>
-        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-          {_("Current Level: {{x}}").replace("{{x}}", currMaxEnergy)}
-        </div>
-        <MenuButton
-          disabled={!canUpgradeMaxEnergy}
-          onClick={onUpgradeMaxEnergy}
-          style={{
-            marginTop: "1.5em",
-            color: canUpgradeMaxEnergy ? "black" : TEXT_PRIMARY,
-            background: canUpgradeMaxEnergy ? MAIN_COLOR : BG_TERTIARY,
-            opacity: canUpgradeMaxEnergy ? 1 : 0.7,
-          }}
-        >
-          {maxEnergyLevel >= MAX_ENERGY_SKILL_MAX_LEVEL
-            ? _("MAXED")
-            : _("Upgrade")}
-        </MenuButton>
-      </div>
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"maxEnergy"}
+        skillName={_("Stamina")}
+        skillLevel={player.skills.maxEnergy}
+        skillMaxLevel={MAX_ENERGY_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Increases your maximum energy by +10 per upgrade.",
+        )}
+        skillSummary={_("+{{x}} max. energy").replace(
+          "{{x}}",
+          `${player.skills.maxEnergy * 10}`,
+        )}
+      />
 
-      <div style={card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1em",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
-            {_("Berserker")}
-          </div>
-          <div>
-            {_("LEVEL")} {berserkerLevel}/{BERSERKER_SKILL_MAX_LEVEL}
-          </div>
-        </div>
-        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_(
-            "Having so much pending sentences to review starts to put your mind into overdrive. The heavier the workload, the less energy each review session consumes. Reduces energy cost based on pending reviews: 100+ (-0.4%), 200+ (-0.8%), 300+ (-1.2%), 400+ (-1.6%), 500+ (-2%) per upgrade.",
-          )}
-          <p>{_("In easy mode the reduction is only half as effective.")}</p>
-        </div>
-        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-          {_("Current Level: {{x}}").replace("{{x}}", currBerserker)}
-        </div>
-        <MenuButton
-          disabled={!canUpgradeBerserker}
-          onClick={onUpgradeBerserker}
-          style={{
-            marginTop: "1.5em",
-            color: canUpgradeBerserker ? "black" : TEXT_PRIMARY,
-            background: canUpgradeBerserker ? MAIN_COLOR : BG_TERTIARY,
-            opacity: canUpgradeBerserker ? 1 : 0.7,
-          }}
-        >
-          {berserkerLevel >= BERSERKER_SKILL_MAX_LEVEL
-            ? _("MAXED")
-            : _("Upgrade")}
-        </MenuButton>
-      </div>
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"berserker"}
+        skillName={_("Berserker")}
+        skillLevel={player.skills.berserker}
+        skillMaxLevel={BERSERKER_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Having so much pending sentences to review starts to put your mind into overdrive. The heavier the workload, the less energy each review session consumes. Reduces energy cost based on pending reviews: 100+ (-0.4%), 200+ (-0.8%), 300+ (-1.2%), 400+ (-1.6%), 500+ (-2%) per upgrade.",
+        )}
+        skillSummary={_(
+          "-{{easy}}% easy / -{{normal}}% normal with {{x}} to review",
+        )
+          .replace("{{easy}}", String(currBerserkerEasy))
+          .replace("{{normal}}", String(currBerserkerNormal))
+          .replace("{{x}}", String(player.toReview))}
+      />
 
-      <div style={card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1em",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
-            {_("Golden Touch")}
-          </div>
-          <div>
-            {_("LEVEL")} {goldenTouchLevel}/{GOLDEN_TOUCH_SKILL_MAX_LEVEL}
-          </div>
-        </div>
-        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_(
-            "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.",
-          )}
-        </div>
-        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-          {_("Current Level: {{x}}").replace("{{x}}", currGoldenTouch)}
-        </div>
-        <MenuButton
-          disabled={!canUpgradeGoldenTouch}
-          onClick={onUpgradeGoldenTouch}
-          style={{
-            marginTop: "1.5em",
-            color: canUpgradeGoldenTouch ? "black" : TEXT_PRIMARY,
-            background: canUpgradeGoldenTouch ? MAIN_COLOR : BG_TERTIARY,
-            opacity: canUpgradeGoldenTouch ? 1 : 0.7,
-          }}
-        >
-          {goldenTouchLevel >= GOLDEN_TOUCH_SKILL_MAX_LEVEL
-            ? _("MAXED")
-            : _("Upgrade")}
-        </MenuButton>
-      </div>
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"goldenTouch"}
+        skillName={_("Golden Touch")}
+        skillLevel={player.skills.goldenTouch}
+        skillMaxLevel={GOLDEN_TOUCH_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.",
+        )}
+        skillSummary={_(
+          "Monster's level increased by +{{x}} when the golden button is used",
+        ).replace("{{x}}", String(5 + player.skills.goldenTouch))}
+      />
 
-      <div style={card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1em",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
-            {_("Life Steal")}
-          </div>
-          <div>
-            {_("LEVEL")} {lifeStealLevel}/{LIFE_STEAL_SKILL_MAX_LEVEL}
-          </div>
-        </div>
-        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_(
-            "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.",
-          )
-            .replace("{{base}}", String(LIFE_STEAL_BASE_CHANCE))
-            .replace("{{inc}}", String(LIFE_STEAL_CHANCE_PER_LEVEL))}
-        </div>
-        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-          {_("Current Level: {{x}}").replace("{{x}}", currLifeSteal)}
-        </div>
-        <MenuButton
-          disabled={!canUpgradeLifeSteal}
-          onClick={onUpgradeLifeSteal}
-          style={{
-            marginTop: "1.5em",
-            color: canUpgradeLifeSteal ? "black" : TEXT_PRIMARY,
-            background: canUpgradeLifeSteal ? MAIN_COLOR : BG_TERTIARY,
-            opacity: canUpgradeLifeSteal ? 1 : 0.7,
-          }}
-        >
-          {lifeStealLevel >= LIFE_STEAL_SKILL_MAX_LEVEL
-            ? _("MAXED")
-            : _("Upgrade")}
-        </MenuButton>
-      </div>
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"lifeSteal"}
+        skillName={_("Life Steal")}
+        skillLevel={player.skills.lifeSteal}
+        skillMaxLevel={LIFE_STEAL_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.",
+        )
+          .replace("{{base}}", String(LIFE_STEAL_BASE_CHANCE))
+          .replace("{{inc}}", String(LIFE_STEAL_CHANCE_PER_LEVEL))}
+        skillSummary={_("{{x}}% chance of +5 energy on correct answer").replace(
+          "{{x}}",
+          String(getLifeStealChance(player.skills.lifeSteal)),
+        )}
+      />
 
-      <div style={card}>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "1em",
-            alignItems: "center",
-          }}
-        >
-          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
-            {_("Critical Hit")}
-          </div>
-          <div>
-            {_("LEVEL")} {criticalHitLevel}/{CRITICAL_HIT_SKILL_MAX_LEVEL}
-          </div>
-        </div>
-        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_(
-            "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.",
-          )
-            .replace("{{base}}", String(CRITICAL_HIT_BASE_CHANCE))
-            .replace("{{inc}}", String(CRITICAL_HIT_CHANCE_PER_LEVEL))}
-        </div>
-        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-          {_("Current Level: {{x}}").replace("{{x}}", currCriticalHit)}
-        </div>
-        <MenuButton
-          disabled={!canUpgradeCriticalHit}
-          onClick={onUpgradeCriticalHit}
-          style={{
-            marginTop: "1.5em",
-            color: canUpgradeCriticalHit ? "black" : TEXT_PRIMARY,
-            background: canUpgradeCriticalHit ? MAIN_COLOR : BG_TERTIARY,
-            opacity: canUpgradeCriticalHit ? 1 : 0.7,
-          }}
-        >
-          {criticalHitLevel >= CRITICAL_HIT_SKILL_MAX_LEVEL
-            ? _("MAXED")
-            : _("Upgrade")}
-        </MenuButton>
-      </div>
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"criticalHit"}
+        skillName={_("Critical Hit")}
+        skillLevel={player.skills.criticalHit}
+        skillMaxLevel={CRITICAL_HIT_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.",
+        )
+          .replace("{{base}}", String(CRITICAL_HIT_BASE_CHANCE))
+          .replace("{{inc}}", String(CRITICAL_HIT_CHANCE_PER_LEVEL))}
+        skillSummary={_("{{x}}% chance of x1.5 XP on correct answer").replace(
+          "{{x}}",
+          String(getCriticalHitChance(player.skills.criticalHit)),
+        )}
+      />
 
       <MenuButton
         onClick={onBack}
@@ -395,6 +181,67 @@ export default function Skills({ player, onBack }: Props) {
         }}
       >
         {_("Back")}
+      </MenuButton>
+    </div>
+  );
+}
+
+interface SkillCardProps {
+  availablePoints: number;
+  skillId: keyof PlayerSkills;
+  skillName: string;
+  skillLevel: number;
+  skillMaxLevel: number;
+  skillDescription: string;
+  skillSummary: string;
+}
+
+function SkillCard({
+  availablePoints,
+  skillId,
+  skillName,
+  skillLevel,
+  skillMaxLevel,
+  skillDescription,
+  skillSummary,
+}: SkillCardProps) {
+  const canUpgrade = availablePoints > 0 && skillLevel < skillMaxLevel;
+  const onUpgradeSkill = useCallback(async () => {
+    await upgradeSkill(skillId);
+  }, [skillId]);
+
+  return (
+    <div style={card}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: "1em",
+          alignItems: "center",
+        }}
+      >
+        <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>{skillName}</div>
+        <div>
+          {_("LEVEL")} {skillLevel}/{skillMaxLevel}
+        </div>
+      </div>
+      <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
+        {skillDescription}
+      </div>
+      <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
+        {_("Current Level: {{x}}").replace("{{x}}", skillSummary)}
+      </div>
+      <MenuButton
+        disabled={!canUpgrade}
+        onClick={onUpgradeSkill}
+        style={{
+          marginTop: "1.5em",
+          color: canUpgrade ? "black" : TEXT_PRIMARY,
+          background: canUpgrade ? MAIN_COLOR : BG_TERTIARY,
+          opacity: canUpgrade ? 1 : 0.7,
+        }}
+      >
+        {skillLevel >= skillMaxLevel ? _("MAXED") : _("Upgrade")}
       </MenuButton>
     </div>
   );
