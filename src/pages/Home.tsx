@@ -9,6 +9,7 @@ import StarSolidIcon from "~icons/pixel/star-solid?width=1em&height=1em";
 
 import { _ } from "~/lib/i18n";
 import { getLastPlayed } from "~/lib/storage";
+import { ON_FIRE_STREAK_THRESHOLD } from "~/lib/game";
 import {
   MAIN_COLOR,
   GOLDEN,
@@ -62,7 +63,7 @@ export default function Home({ player, onShowSkills }: Props) {
   );
   const today = new Date().setHours(0, 0, 0, 0);
   const lastPlayed = getLastPlayed();
-  const epicStreak = player.streak >= 7;
+  const epicStreak = player.streak >= ON_FIRE_STREAK_THRESHOLD;
   const streakColor =
     lastPlayed === today ? (epicStreak ? GOLDEN : MAIN_COLOR) : TEXT_TERTIARY;
   const streakSize = player.streak > 999 ? "0.9em" : undefined;
