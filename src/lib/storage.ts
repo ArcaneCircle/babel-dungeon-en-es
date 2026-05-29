@@ -35,6 +35,7 @@ export async function exportBackup(): Promise<Backup> {
     goldenTouchSkill: localStorage.goldenTouchSkill,
     lifeStealSkill: localStorage.lifeStealSkill,
     criticalHitSkill: localStorage.criticalHitSkill,
+    fastLearnerSkill: localStorage.fastLearnerSkill,
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
@@ -76,6 +77,7 @@ export async function importBackup(backup: Backup) {
   localStorage.goldenTouchSkill = backup.goldenTouchSkill || "0";
   localStorage.lifeStealSkill = backup.lifeStealSkill || "0";
   localStorage.criticalHitSkill = backup.criticalHitSkill || "0";
+  localStorage.fastLearnerSkill = backup.fastLearnerSkill || "0";
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
@@ -229,6 +231,14 @@ export function getCriticalHitSkillLevel(): number {
 
 export function setCriticalHitSkillLevel(level: number) {
   localStorage.criticalHitSkill = level.toString();
+}
+
+export function getFastLearnerSkillLevel(): number {
+  return parseInt(localStorage.fastLearnerSkill || "0");
+}
+
+export function setFastLearnerSkillLevel(level: number) {
+  localStorage.fastLearnerSkill = level.toString();
 }
 
 export function getStudiedToday(): number {

@@ -73,6 +73,9 @@
   "Critical Hit": "Kolpe kritikoa",
   "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.": "Zuzen erantzundako esaldi bakoitzak x1.5 XP emateko {{base}}% aukera du, eta hobekuntza bakoitzeko +{{inc}}% aukera gehigarri bat.",
   "{{x}}% chance of x1.5 XP on correct answer": "{{x}}% aukera x1.5 XP lortzeko esaldi zuzenean",
+  "Fast Learner": "Ikasle azkarra",
+  "You learn faster than the average person, earning more experience than usual per correctly answered sentence (+1 XP per upgrade).": "Batez besteko pertsona baino azkarrago ikasten duzu, eta normalean baino esperientzia gehiago lortzen duzu zuzen erantzundako esaldi bakoitzeko (+1 XP hobekuntza bakoitzeko).",
+  "+{{x}} XP per correct answer": "+{{x}} XP erantzun zuzen bakoitzeko",
   "Energy gained:": "Lortutako energia:",
 
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",

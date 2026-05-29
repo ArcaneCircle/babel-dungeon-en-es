@@ -28,6 +28,8 @@ import {
   setLifeStealSkillLevel,
   getCriticalHitSkillLevel,
   setCriticalHitSkillLevel,
+  getFastLearnerSkillLevel,
+  setFastLearnerSkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -59,6 +61,7 @@ export const CRITICAL_HIT_SKILL_MAX_LEVEL = 50;
 export const CRITICAL_HIT_BASE_CHANCE = 10;
 export const CRITICAL_HIT_CHANCE_PER_LEVEL = 0.5;
 export const CRITICAL_HIT_XP_MULTIPLIER = 1.5;
+export const FAST_LEARNER_SKILL_MAX_LEVEL = 50;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
@@ -166,6 +169,7 @@ export async function getPlayer(): Promise<Player> {
       goldenTouch: getGoldenTouchSkillLevel(),
       lifeSteal: getLifeStealSkillLevel(),
       criticalHit: getCriticalHitSkillLevel(),
+      fastLearner: getFastLearnerSkillLevel(),
     },
     streak,
     studiedToday,
@@ -234,6 +238,7 @@ export async function upgradeSkill(
   const goldenTouchSkill = getGoldenTouchSkillLevel();
   const lifeStealSkill = getLifeStealSkillLevel();
   const criticalHitSkill = getCriticalHitSkillLevel();
+  const fastLearnerSkill = getFastLearnerSkillLevel();
 
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
@@ -251,6 +256,8 @@ export async function upgradeSkill(
         lifeSteal: skill === "lifeSteal" ? lifeStealSkill + 1 : lifeStealSkill,
         criticalHit:
           skill === "criticalHit" ? criticalHitSkill + 1 : criticalHitSkill,
+        fastLearner:
+          skill === "fastLearner" ? fastLearnerSkill + 1 : fastLearnerSkill,
       },
     },
     "",
@@ -289,7 +296,7 @@ export function sendMonsterUpdate(
     monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
     if (level !== MAX_LEVEL) {
       const bonus = Math.min(Math.floor(level / 5), 40);
-      xp = Math.min(bonus + monster.streak, 50);
+      xp = Math.min(bonus + monster.streak, 50) + getFastLearnerSkillLevel();
       if (rollCriticalHit()) {
         xp = Math.round(xp * CRITICAL_HIT_XP_MULTIPLIER);
       }
@@ -512,6 +519,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setGoldenTouchSkillLevel(payload.goldenTouch);
         setLifeStealSkillLevel(payload.lifeSteal);
         setCriticalHitSkillLevel(payload.criticalHit);
+        setFastLearnerSkillLevel(payload.fastLearner);
         if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }

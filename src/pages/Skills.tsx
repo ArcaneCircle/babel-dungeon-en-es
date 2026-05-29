@@ -9,6 +9,7 @@ import {
   MOTIVATED_SKILL_MAX_LEVEL,
   MAX_ENERGY_SKILL_MAX_LEVEL,
   BERSERKER_SKILL_MAX_LEVEL,
+  getBerserkerReductionPercent,
   GOLDEN_TOUCH_SKILL_MAX_LEVEL,
   LIFE_STEAL_SKILL_MAX_LEVEL,
   LIFE_STEAL_BASE_CHANCE,
@@ -18,7 +19,7 @@ import {
   CRITICAL_HIT_BASE_CHANCE,
   CRITICAL_HIT_CHANCE_PER_LEVEL,
   getCriticalHitChance,
-  getBerserkerReductionPercent,
+  FAST_LEARNER_SKILL_MAX_LEVEL,
 } from "~/lib/game";
 import {
   MAIN_COLOR,
@@ -169,6 +170,21 @@ export default function Skills({ player, onBack }: Props) {
         skillSummary={_("{{x}}% chance of x1.5 XP on correct answer").replace(
           "{{x}}",
           String(getCriticalHitChance(player.skills.criticalHit)),
+        )}
+      />
+
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"fastLearner"}
+        skillName={_("Fast Learner")}
+        skillLevel={player.skills.fastLearner}
+        skillMaxLevel={FAST_LEARNER_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "You learn faster than the average person, earning more experience than usual per correctly answered sentence (+1 XP per upgrade).",
+        )}
+        skillSummary={_("+{{x}} XP per correct answer").replace(
+          "{{x}}",
+          String(player.skills.fastLearner),
         )}
       />
 
