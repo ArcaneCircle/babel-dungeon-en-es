@@ -7,6 +7,7 @@ import ConfirmModal from "./ConfirmModal";
 type Props = {
   time: number;
   xp: number;
+  onFireXp: number;
   energyGained: number;
   accuracy: number;
   [key: string]: any;
@@ -15,6 +16,7 @@ type Props = {
 export default function ResultsModal({
   time,
   xp,
+  onFireXp,
   energyGained,
   accuracy,
   ...props
@@ -35,24 +37,35 @@ export default function ResultsModal({
           <hr />
         </div>
         <div>
-          <div style={divStyle}>
-            <span>{_("Total XP:")}</span>
-            <span>+{xp}</span>
-          </div>
-          <div style={divStyle}>
-            <span>{_("Accuracy:")}</span>
-            <span style={{ color: accuracyColor }}>{accuracy}%</span>
-          </div>
-          <div style={divStyle}>
-            <span>{_("Time:")}</span>
-            <span>{formatTime(time)}</span>
-          </div>
           {energyGained > 0 && (
             <div style={divStyle}>
               <span>{_("Energy gained:")}</span>
               <span>+{energyGained}</span>
             </div>
           )}
+          {onFireXp > 0 && (
+            <div style={divStyle}>
+              <span>{_("On Fire:")}</span>
+              <span>{_("+{{x}}xp").replace("{{x}}", String(onFireXp))}</span>
+            </div>
+          )}
+
+          {energyGained + onFireXp > 0 && <hr />}
+
+          <div style={divStyle}>
+            <span>{_("Time:")}</span>
+            <span>{formatTime(time)}</span>
+          </div>
+
+          <div style={divStyle}>
+            <span>{_("Accuracy:")}</span>
+            <span style={{ color: accuracyColor }}>{accuracy}%</span>
+          </div>
+
+          <div style={divStyle}>
+            <span>{_("Total XP:")}</span>
+            <span>+{xp}</span>
+          </div>
         </div>
       </div>
     </ConfirmModal>

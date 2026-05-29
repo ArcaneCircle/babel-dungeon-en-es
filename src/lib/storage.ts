@@ -36,6 +36,7 @@ export async function exportBackup(): Promise<Backup> {
     lifeStealSkill: localStorage.lifeStealSkill,
     criticalHitSkill: localStorage.criticalHitSkill,
     fastLearnerSkill: localStorage.fastLearnerSkill,
+    onFireSkill: localStorage.onFireSkill,
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
@@ -53,6 +54,7 @@ export async function importBackup(backup: Backup) {
     if (backup.session) {
       const session = JSON.parse(backup.session);
       session.energyGained = 0;
+      session.onFireXp = 0;
       backup.session = JSON.stringify(session);
     }
   }
@@ -78,6 +80,7 @@ export async function importBackup(backup: Backup) {
   localStorage.lifeStealSkill = backup.lifeStealSkill || "0";
   localStorage.criticalHitSkill = backup.criticalHitSkill || "0";
   localStorage.fastLearnerSkill = backup.fastLearnerSkill || "0";
+  localStorage.onFireSkill = backup.onFireSkill || "0";
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
@@ -239,6 +242,14 @@ export function getFastLearnerSkillLevel(): number {
 
 export function setFastLearnerSkillLevel(level: number) {
   localStorage.fastLearnerSkill = level.toString();
+}
+
+export function getOnFireSkillLevel(): number {
+  return parseInt(localStorage.onFireSkill || "0");
+}
+
+export function setOnFireSkillLevel(level: number) {
+  localStorage.onFireSkill = level.toString();
 }
 
 export function getStudiedToday(): number {

@@ -20,6 +20,9 @@ import {
   CRITICAL_HIT_CHANCE_PER_LEVEL,
   getCriticalHitChance,
   FAST_LEARNER_SKILL_MAX_LEVEL,
+  ON_FIRE_SKILL_MAX_LEVEL,
+  ON_FIRE_BASE_XP_PER_UPGRADE,
+  ON_FIRE_STREAK_THRESHOLD,
 } from "~/lib/game";
 import {
   MAIN_COLOR,
@@ -186,6 +189,25 @@ export default function Skills({ player, onBack }: Props) {
           "{{x}}",
           String(player.skills.fastLearner),
         )}
+      />
+
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"onFire"}
+        skillName={_("On Fire")}
+        skillLevel={player.skills.onFire}
+        skillMaxLevel={ON_FIRE_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Each day your streak increases and reaches {{min}} or higher, you gain +{{x}} XP per upgrade.",
+        )
+          .replace("{{min}}", String(ON_FIRE_STREAK_THRESHOLD))
+          .replace("{{x}}", String(ON_FIRE_BASE_XP_PER_UPGRADE))}
+        skillSummary={_("+{{x}} XP when streak increases to {{min}}+")
+          .replace(
+            "{{x}}",
+            String(player.skills.onFire * ON_FIRE_BASE_XP_PER_UPGRADE),
+          )
+          .replace("{{min}}", String(ON_FIRE_STREAK_THRESHOLD))}
       />
 
       <MenuButton

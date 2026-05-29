@@ -30,6 +30,8 @@ import {
   setCriticalHitSkillLevel,
   getFastLearnerSkillLevel,
   setFastLearnerSkillLevel,
+  getOnFireSkillLevel,
+  setOnFireSkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -62,6 +64,9 @@ export const CRITICAL_HIT_BASE_CHANCE = 10;
 export const CRITICAL_HIT_CHANCE_PER_LEVEL = 0.5;
 export const CRITICAL_HIT_XP_MULTIPLIER = 1.5;
 export const FAST_LEARNER_SKILL_MAX_LEVEL = 50;
+export const ON_FIRE_SKILL_MAX_LEVEL = 50;
+export const ON_FIRE_BASE_XP_PER_UPGRADE = 200;
+export const ON_FIRE_STREAK_THRESHOLD = 7;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
@@ -170,6 +175,7 @@ export async function getPlayer(): Promise<Player> {
       lifeSteal: getLifeStealSkillLevel(),
       criticalHit: getCriticalHitSkillLevel(),
       fastLearner: getFastLearnerSkillLevel(),
+      onFire: getOnFireSkillLevel(),
     },
     streak,
     studiedToday,
@@ -239,6 +245,7 @@ export async function upgradeSkill(
   const lifeStealSkill = getLifeStealSkillLevel();
   const criticalHitSkill = getCriticalHitSkillLevel();
   const fastLearnerSkill = getFastLearnerSkillLevel();
+  const onFireSkill = getOnFireSkillLevel();
 
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
@@ -258,6 +265,7 @@ export async function upgradeSkill(
           skill === "criticalHit" ? criticalHitSkill + 1 : criticalHitSkill,
         fastLearner:
           skill === "fastLearner" ? fastLearnerSkill + 1 : fastLearnerSkill,
+        onFire: skill === "onFire" ? onFireSkill + 1 : onFireSkill,
       },
     },
     "",
@@ -275,7 +283,8 @@ function getResultsModal(
   return {
     type: "results",
     time: endTime - session.start,
-    xp: session.xp,
+    xp: session.xp + session.onFireXp,
+    onFireXp: session.onFireXp,
     energyGained: session.energyGained,
     accuracy: Math.round((correct / total) * 100),
     next,
@@ -356,6 +365,8 @@ export function sendMonsterUpdate(
     // session contains updated state
     pendingMonsterUpdates.length = 0;
 
+    session.onFireXp = getOnFireBonusXp(session);
+
     const update = {
       payload: {
         uid: window.webxdc.selfAddr,
@@ -363,7 +374,7 @@ export function sendMonsterUpdate(
         session,
       },
     } as SendingStatusUpdate<Payload>;
-    const { level: newLevel } = increaseXp(session.xp);
+    const { level: newLevel } = increaseXp(session.xp + session.onFireXp);
     if (level < newLevel) {
       const rewards = getLevelUpRewards(level, newLevel);
       modal = getResultsModal(session, monster.seen, {
@@ -478,7 +489,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         }
 
         const currentLevel = getLevel();
-        const { xp, level } = increaseXp(session.xp);
+        const { xp, level } = increaseXp(session.xp + session.onFireXp);
         if (currentLevel < level) {
           const rewards = getLevelUpRewards(currentLevel, level);
           if (rewards.restoredEnergy) setEnergy(rewards.nextEnergy, Date.now());
@@ -520,6 +531,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setLifeStealSkillLevel(payload.lifeSteal);
         setCriticalHitSkillLevel(payload.criticalHit);
         setFastLearnerSkillLevel(payload.fastLearner);
+        setOnFireSkillLevel(payload.onFire);
         if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }
@@ -580,6 +592,7 @@ async function createNewSession(
     start,
     mode,
     xp: 0,
+    onFireXp: 0,
     energyGained: 0,
     failedIds: [],
     correct: [],
@@ -716,4 +729,21 @@ function rollCriticalHit(): boolean {
   if (!criticalHitLevel) return false;
   const chance = getCriticalHitChance(criticalHitLevel);
   return Math.random() * 100 < chance;
+}
+
+function getOnFireBonusXp(session: Session): number {
+  const onFireLevel = getOnFireSkillLevel();
+  if (!onFireLevel || !session.correct.length) return 0;
+
+  const seen = session.correct[session.correct.length - 1].seen;
+  const newPlayed = new Date(seen).setHours(0, 0, 0, 0);
+  const lastPlayed = getLastPlayed();
+  if (lastPlayed >= newPlayed) return 0;
+
+  const oneDayBefore = new Date(newPlayed);
+  oneDayBefore.setDate(oneDayBefore.getDate() - 1);
+  const nextStreak = lastPlayed < oneDayBefore.getTime() ? 1 : getStreak() + 1;
+  if (nextStreak < ON_FIRE_STREAK_THRESHOLD) return 0;
+
+  return onFireLevel * ON_FIRE_BASE_XP_PER_UPGRADE;
 }

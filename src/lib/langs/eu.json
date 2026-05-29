@@ -76,13 +76,17 @@
   "Fast Learner": "Ikasle azkarra",
   "You learn faster than the average person, earning more experience than usual per correctly answered sentence (+1 XP per upgrade).": "Batez besteko pertsona baino azkarrago ikasten duzu, eta normalean baino esperientzia gehiago lortzen duzu zuzen erantzundako esaldi bakoitzeko (+1 XP hobekuntza bakoitzeko).",
   "+{{x}} XP per correct answer": "+{{x}} XP erantzun zuzen bakoitzeko",
-  "Energy gained:": "Lortutako energia:",
+  "On Fire": "Sutan",
+  "Each day your streak increases and reaches {{min}} or higher, you gain +{{x}} XP per upgrade.": "Zure jarraipena egunero handitzen denean eta {{min}} edo gehiagora iristen denean, +{{x}} XP irabazten duzu hobekuntza bakoitzeko.",
+  "+{{x}} XP when streak increases to {{min}}+": "+{{x}} XP jarraipena {{min}}+ra igotzen denean",
 
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",
   "Your energy is too low.": "Energia gutxiegi duzu.",
   "You will recover energy over time. Take a break and come back later!": "Denborarekin indartuko zara berriro. Hartu atseden eta itzuli geroago!",
 
   "ROUND COMPLETED!": "ITZULIA BURUTUTA!",
+  "Energy gained:": "Lortutako energia:",
+  "On Fire:": "Sutan:",
   "Total XP:": "XP osoa:",
   "Accuracy:": "Zehaztasuna:",
   "Time:": "Denbora:",

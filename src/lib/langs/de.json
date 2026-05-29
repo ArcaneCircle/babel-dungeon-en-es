@@ -76,13 +76,17 @@
   "Fast Learner": "Schnelllerner",
   "You learn faster than the average person, earning more experience than usual per correctly answered sentence (+1 XP per upgrade).": "Du lernst schneller als eine durchschnittliche Person und erhältst pro korrekt beantwortetem Satz mehr Erfahrung als üblich (+1 XP pro Aufwertung).",
   "+{{x}} XP per correct answer": "+{{x}} XP pro richtiger Antwort",
-  "Energy gained:": "Gewonnene Energie:",
+  "On Fire": "In Flammen",
+  "Each day your streak increases and reaches {{min}} or higher, you gain +{{x}} XP per upgrade.": "An jedem Tag, an dem deine Serie steigt und {{min}} oder mehr erreicht, erhältst du +{{x}} XP pro Aufwertung.",
+  "+{{x}} XP when streak increases to {{min}}+": "+{{x}} XP, wenn die Serie auf {{min}}+ steigt",
 
   "LOW ENERGY!": "NIEDRIGE ENERGIE",
   "Your energy is too low.": "Deine Energie ist zu niedrig.",
   "You will recover energy over time. Take a break and come back later!": "Deine bekommst Energie mit der Zeit. Nimm Dir eine Pause und komme später wieder!",
 
   "ROUND COMPLETED!": "RUNDE ABGESCHLOSSEN",
+  "Energy gained:": "Gewonnene Energie:",
+  "On Fire:": "In Flammen:",
   "Total XP:": "Gesamt XP:",
   "Accuracy:": "Genauigkeit:",
   "Time:": "Zeit:",

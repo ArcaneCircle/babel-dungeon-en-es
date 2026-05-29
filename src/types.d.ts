@@ -43,6 +43,7 @@ declare type Payload = { uid: string } & (
       lifeSteal: number;
       criticalHit: number;
       fastLearner: number;
+      onFire: number;
     }
 );
 
@@ -63,6 +64,7 @@ declare interface Session {
   start: number;
   mode: GameMode;
   xp: number;
+  onFireXp: number;
   energyGained: number;
   failedIds: number[];
   correct: Monster[];
@@ -94,6 +96,7 @@ declare interface PlayerSkills {
   lifeSteal: number;
   criticalHit: number;
   fastLearner: number;
+  onFire: number;
 }
 
 declare interface Backup {
@@ -117,6 +120,7 @@ declare interface Backup {
   lifeStealSkill: string;
   criticalHitSkill: string;
   fastLearnerSkill: string;
+  onFireSkill: string;
   sfx: string;
   tts: string;
   learningLanguage: string;
@@ -135,6 +139,7 @@ declare type ModalPayload =
       type: "results";
       time: number;
       xp: number;
+      onFireXp: number;
       energyGained: number;
       accuracy: number;
       next: ModalPayload | null;
