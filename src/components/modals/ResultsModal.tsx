@@ -7,11 +7,18 @@ import ConfirmModal from "./ConfirmModal";
 type Props = {
   time: number;
   xp: number;
+  energyGained: number;
   accuracy: number;
   [key: string]: any;
 };
 
-export default function ResultsModal({ time, xp, accuracy, ...props }: Props) {
+export default function ResultsModal({
+  time,
+  xp,
+  energyGained,
+  accuracy,
+  ...props
+}: Props) {
   const divStyle = {
     display: "flex",
     flexDirection: "row" as "row",
@@ -40,6 +47,12 @@ export default function ResultsModal({ time, xp, accuracy, ...props }: Props) {
             <span>{_("Time:")}</span>
             <span>{formatTime(time)}</span>
           </div>
+          {energyGained > 0 && (
+            <div style={divStyle}>
+              <span>{_("Energy gained:")}</span>
+              <span>+{energyGained}</span>
+            </div>
+          )}
         </div>
       </div>
     </ConfirmModal>

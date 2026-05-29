@@ -33,6 +33,7 @@ export async function exportBackup(): Promise<Backup> {
     maxEnergySkill: localStorage.maxEnergySkill,
     berserkerSkill: localStorage.berserkerSkill,
     goldenTouchSkill: localStorage.goldenTouchSkill,
+    lifeStealSkill: localStorage.lifeStealSkill,
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
@@ -45,6 +46,15 @@ export async function importBackup(backup: Backup) {
     return;
   }
 
+  if (backup.version < 5) {
+    backup.energy = (parseInt(backup.energy) * 10).toString();
+    if (backup.session) {
+      const session = JSON.parse(backup.session);
+      session.energyGained = 0;
+      backup.session = JSON.stringify(session);
+    }
+  }
+
   await db.monsters.bulkPut(
     backup.monsters.filter((mon) => mon.id < SENTENCES.length),
   );
@@ -54,11 +64,7 @@ export async function importBackup(backup: Backup) {
   localStorage.streak = backup.streak;
   localStorage.level = backup.level;
   localStorage.xp = backup.xp;
-  if (backup.version < 5) {
-    localStorage.energy = parseInt(backup.energy) * 10;
-  } else {
-    localStorage.energy = backup.energy;
-  }
+  localStorage.energy = backup.energy;
   localStorage.energyTimestamp = backup.energyTimestamp;
   localStorage.studiedToday = backup.studiedToday;
   localStorage.lastPlayed = backup.lastPlayed;
@@ -67,6 +73,7 @@ export async function importBackup(backup: Backup) {
   localStorage.maxEnergySkill = backup.maxEnergySkill || "0";
   localStorage.berserkerSkill = backup.berserkerSkill || "0";
   localStorage.goldenTouchSkill = backup.goldenTouchSkill || "0";
+  localStorage.lifeStealSkill = backup.lifeStealSkill || "0";
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
@@ -204,6 +211,14 @@ export function getGoldenTouchSkillLevel(): number {
 
 export function setGoldenTouchSkillLevel(level: number) {
   localStorage.goldenTouchSkill = level.toString();
+}
+
+export function getLifeStealSkillLevel(): number {
+  return parseInt(localStorage.lifeStealSkill || "0");
+}
+
+export function setLifeStealSkillLevel(level: number) {
+  localStorage.lifeStealSkill = level.toString();
 }
 
 export function getStudiedToday(): number {

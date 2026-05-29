@@ -184,6 +184,7 @@ function Quiz({
           <ResultsModal
             time={modal.time}
             xp={modal.xp}
+            energyGained={modal.energyGained}
             accuracy={modal.accuracy}
           />
         ) : null}

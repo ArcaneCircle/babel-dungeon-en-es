@@ -67,6 +67,10 @@
   "Golden Touch": "Urrezko Ukitua",
   "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Urrezko botoia sakatzean munstroaren maila ohi baino gehiago igotzen da, +1 maila hobekuntza bakoitzeko.",
   "Monster's level increased by +{{x}} when the golden button is used": "Munstroaren maila +{{x}} handitzen da urrezko botoia erabiltzean",
+  "Life Steal": "Bizitza lapurreta",
+  "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.": "Erantzun zuzen bakoitzak {{base}}ko % aukera du +5 energia berreskuratzeko, eta +{{inc}}% gehigarri hobekuntza bakoitzeko.",
+  "{{x}}% chance of +5 energy on correct answer": "{{x}}ko % aukera erantzun zuzenean +5 energia lortzeko",
+  "Energy gained:": "Lortutako energia:",
 
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",
   "Your energy is too low.": "Energia gutxiegi duzu.",

@@ -67,6 +67,10 @@
   "Golden Touch": "Goldene Berührung",
   "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Das Drücken des goldenen Knopfes erhöht die Stufe des Monsters stärker als üblich: +1 Stufe pro Upgrade.",
   "Monster's level increased by +{{x}} when the golden button is used": "Die Stufe des Monsters erhöht sich um +{{x}}, wenn der goldene Knopf verwendet wird",
+  "Life Steal": "Lebensraub",
+  "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.": "Jede richtige Antwort hat eine {{base}}%-Chance, +5 Energie wiederherzustellen, plus eine zusätzliche +{{inc}}%-Chance pro Aufwertung.",
+  "{{x}}% chance of +5 energy on correct answer": "{{x}}% Chance auf +5 Energie bei richtiger Antwort",
+  "Energy gained:": "Gewonnene Energie:",
 
   "LOW ENERGY!": "NIEDRIGE ENERGIE",
   "Your energy is too low.": "Deine Energie ist zu niedrig.",
