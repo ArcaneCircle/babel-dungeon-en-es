@@ -39,10 +39,10 @@ import {
 } from "~/lib/storage";
 
 export const MAX_LEVEL = 1000;
-export const PLAY_ENERGY_COST = 10;
+export const PLAY_ENERGY_COST = 100;
 export const MASTERED_STREAK = 5;
 export const MAX_ENERGY_SKILL_MAX_LEVEL = 50;
-export const BASE_MAX_ENERGY = 30;
+export const BASE_MAX_ENERGY = 300;
 export const MOTIVATED_BASE_RESTORE_PERCENT = 50;
 export const MOTIVATED_SKILL_PER_LEVEL_PERCENT = 1;
 export const MOTIVATED_SKILL_MAX_LEVEL = 50;
@@ -57,7 +57,6 @@ const MONSTER_UPDATE_CMD = "mon-up",
   FINISHED_CMD = "finished",
   IMPORT_CMD = "import";
 const MAX_MONSTER_STREAK = 999;
-const sixMinutes = 6 * 60 * 1000;
 let energyLastCheck = 0;
 let setPlayerState = null as ((player: Player) => void) | null;
 let setSessionState = (_: Session | null) => {};
@@ -94,13 +93,14 @@ const workerLoop = async () => {
   }
   const now = Date.now();
   if (now - energyLastCheck >= 10000) {
-    let { energy, time } = getEnergy();
+    let { energy, time } = getEnergy(BASE_MAX_ENERGY);
     let changed = false;
+    const recoveryDelay = 36 * 1000;
     while (
-      energy < getMaxEnergy(getMaxEnergySkillLevel()) &&
-      now - time >= sixMinutes
+      now - time >= recoveryDelay &&
+      energy < getMaxEnergy(getMaxEnergySkillLevel())
     ) {
-      time += sixMinutes;
+      time += recoveryDelay;
       setEnergy(++energy, time);
       changed = true;
     }
@@ -133,7 +133,7 @@ export async function getPlayer(): Promise<Player> {
   const xp = getXp();
   const totalXp = lvl === MAX_LEVEL ? 0 : toNextLevelMediumFast(lvl);
 
-  const energyState = getEnergy();
+  const energyState = getEnergy(BASE_MAX_ENERGY);
   const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
   const energy = Math.min(energyState.energy, maxEnergy);
   if (energy !== energyState.energy) {
@@ -195,7 +195,7 @@ export function importGame(rawBackup: string): boolean {
 }
 
 export function startNewGame(mode: GameMode, energyCost: number): boolean {
-  const energy = getEnergy().energy - energyCost;
+  const energy = getEnergy(BASE_MAX_ENERGY).energy - energyCost;
   if (energy < 0) return false;
 
   const uid = window.webxdc.selfAddr;
@@ -572,7 +572,7 @@ function increaseXp(xp: number): { xp: number; level: number } {
 
 function getLevelUpRewards(currentLevel: number, newLevel: number) {
   const lvlCount = newLevel - currentLevel;
-  const { energy } = getEnergy();
+  const { energy } = getEnergy(BASE_MAX_ENERGY);
   const maxEnergy = getMaxEnergy(getMaxEnergySkillLevel());
   const missingEnergy = Math.max(0, maxEnergy - energy);
   const restoredPercent = getMotivatedRestorePercent(getMotivatedSkillLevel());
@@ -638,5 +638,5 @@ function toNextLevelMediumFast(level: number): number {
 }
 
 function getMaxEnergy(level: number): number {
-  return BASE_MAX_ENERGY + level;
+  return BASE_MAX_ENERGY + level * 10;
 }

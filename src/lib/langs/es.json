@@ -58,7 +58,7 @@
   "When you level up, a surge of divine energy flows through your body instantly restoring {{base}}% of your maximum energy, plus an additional +{{inc}}% per upgrade.": "Al subir de nivel, una oleada de energía divina recorre tu cuerpo, restaurando al instante el {{base}}% de tu energía máxima, más un +{{inc}}% adicional por mejora.",
   "{{x}}% of max. energy restored": "{{x}}% de la energía máxima será restaurado",
   "Stamina": "Resistencia",
-  "Increases your maximum energy by +1 per upgrade.": "Aumenta tu energía máxima en +1 por mejora.",
+  "Increases your maximum energy by +10 per upgrade.": "Aumenta tu energía máxima en +10 por mejora.",
   "+{{x}} max. energy": "+{{x}} energía máxima",
   "Berserker": "Berserker",
   "Having so much pending sentences to review starts to put your mind into overdrive. The heavier the workload, the less energy each review session consumes. Reduces energy cost based on pending reviews: 100+ (-0.4%), 200+ (-0.8%), 300+ (-1.2%), 400+ (-1.6%), 500+ (-2%) per upgrade.": "Tener tantas oraciones pendientes de revisar hace que tu mente se ponga a toda máquina. Cuanto mayor sea la carga de trabajo, menos energía consumirá cada sesión de repaso. Reduce el coste de energía en función de las revisiones pendientes: 100+ (-0,4%), 200+ (-0,8%), 300+ (-1,2%), 400+ (-1,6%), 500+ (-2%) por mejora.",

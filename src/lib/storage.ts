@@ -3,7 +3,7 @@ import Dexie, { type EntityTable } from "dexie";
 import { LANG1_CODE, LANG2_CODE } from "~/lib/constants";
 import { SENTENCES } from "~/lib/sentences";
 
-const VERSION = 4;
+const VERSION = 5;
 
 export const db = new Dexie("gamedb") as Dexie & {
   monsters: EntityTable<Monster, "id">;
@@ -54,7 +54,11 @@ export async function importBackup(backup: Backup) {
   localStorage.streak = backup.streak;
   localStorage.level = backup.level;
   localStorage.xp = backup.xp;
-  localStorage.energy = backup.energy;
+  if (backup.version < 5) {
+    localStorage.energy = parseInt(backup.energy) * 10;
+  } else {
+    localStorage.energy = backup.energy;
+  }
   localStorage.energyTimestamp = backup.energyTimestamp;
   localStorage.studiedToday = backup.studiedToday;
   localStorage.lastPlayed = backup.lastPlayed;
@@ -150,9 +154,9 @@ export function setXp(xp: number) {
   localStorage.xp = xp;
 }
 
-export function getEnergy(): { energy: number; time: number } {
+export function getEnergy(defEnergy: number): { energy: number; time: number } {
   return {
-    energy: parseInt(localStorage.energy || "30"),
+    energy: parseInt(localStorage.energy || defEnergy),
     time: parseInt(localStorage.energyTimestamp || "0"),
   };
 }

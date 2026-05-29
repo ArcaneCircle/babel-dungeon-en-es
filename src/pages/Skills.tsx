@@ -72,7 +72,7 @@ export default function Skills({ player, onBack }: Props) {
   );
   const currMaxEnergy = _("+{{x}} max. energy").replace(
     "{{x}}",
-    `${maxEnergyLevel}`,
+    `${maxEnergyLevel*10}`,
   );
 
   const currBerserkerEasy = getBerserkerReductionPercent(
@@ -172,7 +172,7 @@ export default function Skills({ player, onBack }: Props) {
           </div>
         </div>
         <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-          {_("Increases your maximum energy by +1 per upgrade.")}
+          {_("Increases your maximum energy by +10 per upgrade.")}
         </div>
         <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
           {_("Current Level: {{x}}").replace("{{x}}", currMaxEnergy)}
