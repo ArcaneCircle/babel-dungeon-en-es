@@ -34,6 +34,7 @@ export async function exportBackup(): Promise<Backup> {
     berserkerSkill: localStorage.berserkerSkill,
     goldenTouchSkill: localStorage.goldenTouchSkill,
     lifeStealSkill: localStorage.lifeStealSkill,
+    criticalHitSkill: localStorage.criticalHitSkill,
     // UI settings
     sfx: localStorage.sfx,
     tts: localStorage.tts,
@@ -74,6 +75,7 @@ export async function importBackup(backup: Backup) {
   localStorage.berserkerSkill = backup.berserkerSkill || "0";
   localStorage.goldenTouchSkill = backup.goldenTouchSkill || "0";
   localStorage.lifeStealSkill = backup.lifeStealSkill || "0";
+  localStorage.criticalHitSkill = backup.criticalHitSkill || "0";
   // UI settings
   localStorage.sfx = backup.sfx || "";
   localStorage.tts = backup.tts || "";
@@ -219,6 +221,14 @@ export function getLifeStealSkillLevel(): number {
 
 export function setLifeStealSkillLevel(level: number) {
   localStorage.lifeStealSkill = level.toString();
+}
+
+export function getCriticalHitSkillLevel(): number {
+  return parseInt(localStorage.criticalHitSkill || "0");
+}
+
+export function setCriticalHitSkillLevel(level: number) {
+  localStorage.criticalHitSkill = level.toString();
 }
 
 export function getStudiedToday(): number {

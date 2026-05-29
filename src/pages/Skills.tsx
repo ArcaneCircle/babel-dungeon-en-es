@@ -14,6 +14,10 @@ import {
   LIFE_STEAL_BASE_CHANCE,
   LIFE_STEAL_CHANCE_PER_LEVEL,
   getLifeStealChance,
+  CRITICAL_HIT_SKILL_MAX_LEVEL,
+  CRITICAL_HIT_BASE_CHANCE,
+  CRITICAL_HIT_CHANCE_PER_LEVEL,
+  getCriticalHitChance,
   getBerserkerReductionPercent,
 } from "~/lib/game";
 import {
@@ -49,6 +53,7 @@ export default function Skills({ player, onBack }: Props) {
   const berserkerLevel = player.skills.berserker;
   const goldenTouchLevel = player.skills.goldenTouch;
   const lifeStealLevel = player.skills.lifeSteal;
+  const criticalHitLevel = player.skills.criticalHit;
   const canUpgradeMotivated =
     player.skillPoints > 0 && motivatedLevel < MOTIVATED_SKILL_MAX_LEVEL;
   const canUpgradeMaxEnergy =
@@ -59,6 +64,8 @@ export default function Skills({ player, onBack }: Props) {
     player.skillPoints > 0 && goldenTouchLevel < GOLDEN_TOUCH_SKILL_MAX_LEVEL;
   const canUpgradeLifeSteal =
     player.skillPoints > 0 && lifeStealLevel < LIFE_STEAL_SKILL_MAX_LEVEL;
+  const canUpgradeCriticalHit =
+    player.skillPoints > 0 && criticalHitLevel < CRITICAL_HIT_SKILL_MAX_LEVEL;
 
   const onUpgradeMotivated = useCallback(async () => {
     await upgradeSkill("motivated");
@@ -74,6 +81,9 @@ export default function Skills({ player, onBack }: Props) {
   }, []);
   const onUpgradeLifeSteal = useCallback(async () => {
     await upgradeSkill("lifeSteal");
+  }, []);
+  const onUpgradeCriticalHit = useCallback(async () => {
+    await upgradeSkill("criticalHit");
   }, []);
 
   const currMotivated = _("{{x}}% of max. energy restored").replace(
@@ -109,6 +119,10 @@ export default function Skills({ player, onBack }: Props) {
   const currLifeSteal = _(
     "{{x}}% chance of +5 energy on correct answer",
   ).replace("{{x}}", String(getLifeStealChance(lifeStealLevel)));
+
+  const currCriticalHit = _(
+    "{{x}}% chance of x1.5 XP on correct answer",
+  ).replace("{{x}}", String(getCriticalHitChance(criticalHitLevel)));
 
   return (
     <div style={{ padding: "0.5em" }}>
@@ -325,6 +339,48 @@ export default function Skills({ player, onBack }: Props) {
           }}
         >
           {lifeStealLevel >= LIFE_STEAL_SKILL_MAX_LEVEL
+            ? _("MAXED")
+            : _("Upgrade")}
+        </MenuButton>
+      </div>
+
+      <div style={card}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "1em",
+            alignItems: "center",
+          }}
+        >
+          <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>
+            {_("Critical Hit")}
+          </div>
+          <div>
+            {_("LEVEL")} {criticalHitLevel}/{CRITICAL_HIT_SKILL_MAX_LEVEL}
+          </div>
+        </div>
+        <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
+          {_(
+            "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.",
+          )
+            .replace("{{base}}", String(CRITICAL_HIT_BASE_CHANCE))
+            .replace("{{inc}}", String(CRITICAL_HIT_CHANCE_PER_LEVEL))}
+        </div>
+        <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
+          {_("Current Level: {{x}}").replace("{{x}}", currCriticalHit)}
+        </div>
+        <MenuButton
+          disabled={!canUpgradeCriticalHit}
+          onClick={onUpgradeCriticalHit}
+          style={{
+            marginTop: "1.5em",
+            color: canUpgradeCriticalHit ? "black" : TEXT_PRIMARY,
+            background: canUpgradeCriticalHit ? MAIN_COLOR : BG_TERTIARY,
+            opacity: canUpgradeCriticalHit ? 1 : 0.7,
+          }}
+        >
+          {criticalHitLevel >= CRITICAL_HIT_SKILL_MAX_LEVEL
             ? _("MAXED")
             : _("Upgrade")}
         </MenuButton>

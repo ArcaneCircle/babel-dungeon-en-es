@@ -41,6 +41,7 @@ declare type Payload = { uid: string } & (
       berserker: number;
       goldenTouch: number;
       lifeSteal: number;
+      criticalHit: number;
     }
 );
 
@@ -90,6 +91,7 @@ declare interface PlayerSkills {
   berserker: number;
   goldenTouch: number;
   lifeSteal: number;
+  criticalHit: number;
 }
 
 declare interface Backup {
@@ -111,6 +113,7 @@ declare interface Backup {
   berserkerSkill: string;
   goldenTouchSkill: string;
   lifeStealSkill: string;
+  criticalHitSkill: string;
   sfx: string;
   tts: string;
   learningLanguage: string;

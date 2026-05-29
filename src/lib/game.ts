@@ -26,6 +26,8 @@ import {
   setGoldenTouchSkillLevel,
   getLifeStealSkillLevel,
   setLifeStealSkillLevel,
+  getCriticalHitSkillLevel,
+  setCriticalHitSkillLevel,
   getLastPlayed,
   setLastPlayed,
   getStudiedToday,
@@ -53,6 +55,10 @@ export const GOLDEN_TOUCH_SKILL_MAX_LEVEL = 50;
 export const LIFE_STEAL_SKILL_MAX_LEVEL = 50;
 export const LIFE_STEAL_BASE_CHANCE = 10;
 export const LIFE_STEAL_CHANCE_PER_LEVEL = 0.5;
+export const CRITICAL_HIT_SKILL_MAX_LEVEL = 50;
+export const CRITICAL_HIT_BASE_CHANCE = 10;
+export const CRITICAL_HIT_CHANCE_PER_LEVEL = 0.5;
+export const CRITICAL_HIT_XP_MULTIPLIER = 1.5;
 
 const MONSTER_UPDATE_CMD = "mon-up",
   INIT_CMD = "init",
@@ -159,6 +165,7 @@ export async function getPlayer(): Promise<Player> {
       berserker: getBerserkerSkillLevel(),
       goldenTouch: getGoldenTouchSkillLevel(),
       lifeSteal: getLifeStealSkillLevel(),
+      criticalHit: getCriticalHitSkillLevel(),
     },
     streak,
     studiedToday,
@@ -226,6 +233,7 @@ export async function upgradeSkill(
   const berserkerSkill = getBerserkerSkillLevel();
   const goldenTouchSkill = getGoldenTouchSkillLevel();
   const lifeStealSkill = getLifeStealSkillLevel();
+  const criticalHitSkill = getCriticalHitSkillLevel();
 
   const uid = window.webxdc.selfAddr;
   window.webxdc.sendUpdate(
@@ -241,6 +249,8 @@ export async function upgradeSkill(
         goldenTouch:
           skill === "goldenTouch" ? goldenTouchSkill + 1 : goldenTouchSkill,
         lifeSteal: skill === "lifeSteal" ? lifeStealSkill + 1 : lifeStealSkill,
+        criticalHit:
+          skill === "criticalHit" ? criticalHitSkill + 1 : criticalHitSkill,
       },
     },
     "",
@@ -275,11 +285,14 @@ export function sendMonsterUpdate(
   const level = getLevel();
   monster.seen = now.getTime();
   let xp = 0;
-  if (correct) {
+  if (correct > 0) {
     monster.streak = Math.min(monster.streak + correct, MAX_MONSTER_STREAK);
     if (level !== MAX_LEVEL) {
       const bonus = Math.min(Math.floor(level / 5), 40);
       xp = Math.min(bonus + monster.streak, 50);
+      if (rollCriticalHit()) {
+        xp = Math.round(xp * CRITICAL_HIT_XP_MULTIPLIER);
+      }
     }
 
     const addHours = (hours: number): number =>
@@ -498,6 +511,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setBerserkerSkillLevel(payload.berserker);
         setGoldenTouchSkillLevel(payload.goldenTouch);
         setLifeStealSkillLevel(payload.lifeSteal);
+        setCriticalHitSkillLevel(payload.criticalHit);
         if (setPlayerState) setPlayerState(await getPlayer());
         break;
       }
@@ -681,4 +695,17 @@ function rollLifeSteal(): number {
   if (!lifeStealLevel) return 0;
   const chance = getLifeStealChance(lifeStealLevel);
   return Math.random() * 100 < chance ? 5 : 0;
+}
+
+export function getCriticalHitChance(level: number): number {
+  return level
+    ? CRITICAL_HIT_BASE_CHANCE + level * CRITICAL_HIT_CHANCE_PER_LEVEL
+    : 0;
+}
+
+function rollCriticalHit(): boolean {
+  const criticalHitLevel = getCriticalHitSkillLevel();
+  if (!criticalHitLevel) return false;
+  const chance = getCriticalHitChance(criticalHitLevel);
+  return Math.random() * 100 < chance;
 }

@@ -68,8 +68,11 @@
   "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.": "Al pulsar el botón dorado, el nivel del monstruo aumenta más de lo habitual: +1 nivel por mejora.",
   "Monster's level increased by +{{x}} when the golden button is used": "El nivel del monstruo aumenta en +{{x}} al usar el botón dorado",
   "Life Steal": "Robo de vida",
-  "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.": "Cada respuesta correcta tiene un {{base}}% de posibilidades de restaurar +5 de energía, más un +{{inc}}% adicional de posibilidades por mejora.",
-  "{{x}}% chance of +5 energy on correct answer": "{{x}}% de posibilidades de +5 de energía en respuesta correcta",
+  "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.": "Cada respuesta correcta tiene un {{base}}% de probabilidad de restaurar +5 de energía, más un +{{inc}}% adicional de probabilidad por mejora.",
+  "{{x}}% chance of +5 energy on correct answer": "{{x}}% de probabilidad de +5 de energía por respuesta correcta",
+  "Critical Hit": "Golpe crítico",
+  "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.": "Cada respuesta correcta tiene un {{base}}% de probabilidad de otorgar x1.5 XP, más una probabilidad adicional de +{{inc}}% por mejora.",
+  "{{x}}% chance of x1.5 XP on correct answer": "{{x}}% de probabilidad de x1.5 XP por respuesta correcta",
   "Energy gained:": "Energía ganada:",
 
   "LOW ENERGY!": "¡ENERGÍA BAJA!",

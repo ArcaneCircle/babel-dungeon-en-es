@@ -70,6 +70,9 @@
   "Life Steal": "Lebensraub",
   "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.": "Jede richtige Antwort hat eine {{base}}%-Chance, +5 Energie wiederherzustellen, plus eine zusätzliche +{{inc}}%-Chance pro Aufwertung.",
   "{{x}}% chance of +5 energy on correct answer": "{{x}}% Chance auf +5 Energie bei richtiger Antwort",
+  "Critical Hit": "Kritischer Treffer",
+  "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.": "Jeder richtige Antwort hat eine {{base}}%-Chance, x1.5 XP zu gewähren, plus eine zusätzliche +{{inc}}%-Chance pro Aufwertung.",
+  "{{x}}% chance of x1.5 XP on correct answer": "{{x}}%-Chance auf x1.5 XP bei richtiger Antwort",
   "Energy gained:": "Gewonnene Energie:",
 
   "LOW ENERGY!": "NIEDRIGE ENERGIE",

@@ -70,6 +70,9 @@
   "Life Steal": "Bizitza lapurreta",
   "Each correct answer has a {{base}}% chance of restoring +5 energy, plus an additional +{{inc}}% chance per upgrade.": "Erantzun zuzen bakoitzak {{base}}ko % aukera du +5 energia berreskuratzeko, eta +{{inc}}% gehigarri hobekuntza bakoitzeko.",
   "{{x}}% chance of +5 energy on correct answer": "{{x}}ko % aukera erantzun zuzenean +5 energia lortzeko",
+  "Critical Hit": "Kolpe kritikoa",
+  "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.": "Zuzen erantzundako esaldi bakoitzak x1.5 XP emateko {{base}}% aukera du, eta hobekuntza bakoitzeko +{{inc}}% aukera gehigarri bat.",
+  "{{x}}% chance of x1.5 XP on correct answer": "{{x}}% aukera x1.5 XP lortzeko esaldi zuzenean",
   "Energy gained:": "Lortutako energia:",
 
   "LOW ENERGY!": "ENERGIA GUTXIEGI!",
