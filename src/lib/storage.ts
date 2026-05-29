@@ -178,7 +178,7 @@ export function setEnergy(energy: number, time: number) {
 }
 
 export function getSkillPoints(): number {
-  return parseInt(localStorage.skillPoints || "0");
+  return parseInt(localStorage.skillPoints || "1");
 }
 
 export function setSkillPoints(skillPoints: number) {
