@@ -89,3 +89,23 @@ a {
     transform: translate(-50%, -2em);
   }
 }
+
+@keyframes skills-button-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.skills-btn-attention {
+  animation: skills-button-blink 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-btn-attention {
+    animation: none;
+  }
+}

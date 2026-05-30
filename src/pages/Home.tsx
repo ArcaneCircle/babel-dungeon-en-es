@@ -208,6 +208,7 @@ export default function Home({ player, onShowSkills }: Props) {
             <PixelCogSolid style={btnIcon} />
           </MenuButton>
           <MenuButton
+            className={player.skillPoints ? "skills-btn-attention" : undefined}
             style={{
               ...baseBtn,
               backgroundColor: player.skillPoints ? GOLDEN : BG_SECONDARY,
