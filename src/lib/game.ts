@@ -65,7 +65,7 @@ export const CRITICAL_HIT_CHANCE_PER_LEVEL = 0.5;
 export const CRITICAL_HIT_XP_MULTIPLIER = 1.5;
 export const FAST_LEARNER_SKILL_MAX_LEVEL = 50;
 export const ON_FIRE_SKILL_MAX_LEVEL = 50;
-export const ON_FIRE_BASE_XP_PER_UPGRADE = 200;
+export const ON_FIRE_BASE_XP_PER_UPGRADE = 100;
 export const ON_FIRE_STREAK_THRESHOLD = 7;
 
 const MONSTER_UPDATE_CMD = "mon-up",
