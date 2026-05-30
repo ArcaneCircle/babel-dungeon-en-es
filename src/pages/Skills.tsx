@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import { _ } from "~/lib/i18n";
 import {
@@ -26,8 +26,8 @@ import {
 } from "~/lib/game";
 import {
   MAIN_COLOR,
+  GOLDEN,
   BG_SECONDARY,
-  BG_TERTIARY,
   BORDER_COLOR,
   TEXT_PRIMARY,
   TEXT_TERTIARY,
@@ -40,7 +40,7 @@ const card = {
   display: "flex",
   flexDirection: "column" as "column",
   border: `1px solid ${BORDER_COLOR}`,
-  borderRadius: "5px",
+  borderRadius: "10px",
   padding: "1em",
   marginBottom: "1em",
 };
@@ -64,14 +64,20 @@ export default function Skills({ player, onBack }: Props) {
 
   return (
     <div style={{ padding: "0.5em" }}>
-      <div style={card}>
-        <div style={{ fontSize: "1.2em", color: MAIN_COLOR }}>
+      <div style={{ ...card, border: undefined }}>
+        <div style={{ fontSize: "1.2em" }}>
           {_("SKILLS")}
+          <hr />
         </div>
         <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
           {_("Spend skill points to upgrade your passive abilities.")}
         </div>
-        <div style={{ marginTop: "1em", color: BLUE }}>
+        <div
+          style={{
+            marginTop: "1em",
+            color: player.skillPoints > 0 ? MAIN_COLOR : TEXT_TERTIARY,
+          }}
+        >
           {_("Skill Points: {{x}}").replace(
             "{{x}}",
             String(player.skillPoints),
@@ -82,6 +88,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"motivated"}
+        skillIcon={"/blessed.png"}
+        skillIconColor={"#5B2E8A"}
         skillName={_("Blessed")}
         skillLevel={player.skills.motivated}
         skillMaxLevel={MOTIVATED_SKILL_MAX_LEVEL}
@@ -99,6 +107,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"maxEnergy"}
+        skillIcon={"/stamina.png"}
+        skillIconColor={"#37B24D"}
         skillName={_("Stamina")}
         skillLevel={player.skills.maxEnergy}
         skillMaxLevel={MAX_ENERGY_SKILL_MAX_LEVEL}
@@ -114,6 +124,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"berserker"}
+        skillIcon={"/berserker.png"}
+        skillIconColor={"#FF6D00"}
         skillName={_("Berserker")}
         skillLevel={player.skills.berserker}
         skillMaxLevel={BERSERKER_SKILL_MAX_LEVEL}
@@ -131,6 +143,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"goldenTouch"}
+        skillIcon={"/golden-touch.png"}
+        skillIconColor={GOLDEN}
         skillName={_("Golden Touch")}
         skillLevel={player.skills.goldenTouch}
         skillMaxLevel={GOLDEN_TOUCH_SKILL_MAX_LEVEL}
@@ -145,6 +159,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"lifeSteal"}
+        skillIcon={"/life-steal.png"}
+        skillIconColor={"#C62828"}
         skillName={_("Life Steal")}
         skillLevel={player.skills.lifeSteal}
         skillMaxLevel={LIFE_STEAL_SKILL_MAX_LEVEL}
@@ -162,6 +178,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"criticalHit"}
+        skillIcon={"/critical-hit.png"}
+        skillIconColor={"#E53935"}
         skillName={_("Critical Hit")}
         skillLevel={player.skills.criticalHit}
         skillMaxLevel={CRITICAL_HIT_SKILL_MAX_LEVEL}
@@ -179,6 +197,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"fastLearner"}
+        skillIcon={"/fast-learner.png"}
+        skillIconColor={BLUE}
         skillName={_("Fast Learner")}
         skillLevel={player.skills.fastLearner}
         skillMaxLevel={FAST_LEARNER_SKILL_MAX_LEVEL}
@@ -194,6 +214,8 @@ export default function Skills({ player, onBack }: Props) {
       <SkillCard
         availablePoints={player.skillPoints}
         skillId={"onFire"}
+        skillIcon={"/on-fire.png"}
+        skillIconColor={"#FF6D00"}
         skillName={_("On Fire")}
         skillLevel={player.skills.onFire}
         skillMaxLevel={ON_FIRE_SKILL_MAX_LEVEL}
@@ -215,7 +237,9 @@ export default function Skills({ player, onBack }: Props) {
         style={{
           color: TEXT_PRIMARY,
           backgroundColor: BG_SECONDARY,
+          fontSize: "1.1em",
           marginTop: "1em",
+          padding: "0.6em",
         }}
       >
         {_("Back")}
@@ -232,6 +256,8 @@ interface SkillCardProps {
   skillMaxLevel: number;
   skillDescription: string;
   skillSummary: string;
+  skillIcon: string;
+  skillIconColor: string;
 }
 
 function SkillCard({
@@ -242,11 +268,15 @@ function SkillCard({
   skillMaxLevel,
   skillDescription,
   skillSummary,
+  skillIcon,
+  skillIconColor,
 }: SkillCardProps) {
-  const canUpgrade = availablePoints > 0 && skillLevel < skillMaxLevel;
+  const [showDetails, setShowDetails] = useState(false);
   const onUpgradeSkill = useCallback(async () => {
     await upgradeSkill(skillId);
   }, [skillId]);
+
+  const canUpgrade = availablePoints > 0 && skillLevel < skillMaxLevel;
 
   return (
     <div style={card}>
@@ -258,29 +288,84 @@ function SkillCard({
           alignItems: "center",
         }}
       >
-        <div style={{ color: MAIN_COLOR, fontSize: "1.1em" }}>{skillName}</div>
+        <div style={{ display: "flex", gap: "0.75em", alignItems: "center" }}>
+          <img
+            src={skillIcon}
+            aria-hidden
+            style={{
+              width: "3.2em",
+              height: "3.2em",
+              borderRadius: "8px",
+              background: skillIconColor,
+              padding: "0.2em",
+            }}
+          />
+          <div
+            style={{
+              display: "flex",
+              fontSize: "1em",
+              lineHeight: 1.3,
+              flexDirection: "column",
+            }}
+          >
+            <div>{skillName}</div>
+            <div
+              style={{
+                color: TEXT_TERTIARY,
+                paddingTop: "0.4em",
+              }}
+            >
+              {skillLevel}/{skillMaxLevel}
+            </div>
+          </div>
+        </div>
         <div>
-          {_("LEVEL")} {skillLevel}/{skillMaxLevel}
+          <MenuButton
+            disabled={!canUpgrade}
+            onClick={onUpgradeSkill}
+            aria-label={canUpgrade ? _("Upgrade") : _("MAXED")}
+            style={{
+              color: canUpgrade ? "black" : TEXT_PRIMARY,
+              background: canUpgrade ? MAIN_COLOR : BG_SECONDARY,
+              opacity: canUpgrade ? 1 : 0.7,
+              minWidth: "3em",
+              padding: "0.8em",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <img
+              src={"/upgrade.png"}
+              alt=""
+              aria-hidden
+              style={{ width: "2em", height: "2em" }}
+            />
+          </MenuButton>
         </div>
       </div>
-      <div style={{ marginTop: "1em", lineHeight: 1.6 }}>
-        {skillDescription}
+      <div style={{ marginTop: "0.75em" }}>
+        {_("At current level: {{x}}").replace("{{x}}", skillSummary)}
       </div>
-      <div style={{ marginTop: "1em", color: TEXT_TERTIARY }}>
-        {_("Current Level: {{x}}").replace("{{x}}", skillSummary)}
+      <div style={{ display: "flex", gap: "0.6em", marginTop: "1em" }}>
+        <MenuButton
+          onClick={() => setShowDetails((v) => !v)}
+          style={{
+            backgroundColor: BG_SECONDARY,
+            color: TEXT_PRIMARY,
+            flexGrow: 1,
+          }}
+        >
+          {showDetails ? _("Hide Info") : _("More Info")}
+        </MenuButton>
       </div>
-      <MenuButton
-        disabled={!canUpgrade}
-        onClick={onUpgradeSkill}
-        style={{
-          marginTop: "1.5em",
-          color: canUpgrade ? "black" : TEXT_PRIMARY,
-          background: canUpgrade ? MAIN_COLOR : BG_TERTIARY,
-          opacity: canUpgrade ? 1 : 0.7,
-        }}
-      >
-        {skillLevel >= skillMaxLevel ? _("MAXED") : _("Upgrade")}
-      </MenuButton>
+      {showDetails && (
+        <div
+          style={{ marginTop: "1em", lineHeight: 1.6, color: TEXT_TERTIARY }}
+        >
+          {skillDescription}
+        </div>
+      )}
     </div>
   );
 }
