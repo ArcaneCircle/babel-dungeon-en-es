@@ -98,7 +98,7 @@ export default function Skills({ player, onBack }: Props) {
         )
           .replace("{{base}}", String(MOTIVATED_BASE_RESTORE_PERCENT))
           .replace("{{inc}}", String(MOTIVATED_SKILL_PER_LEVEL_PERCENT))}
-        skillSummary={_("{{x}}% of max. energy restored").replace(
+        skillSummary={_("{{x}}% of maximum energy restored").replace(
           "{{x}}",
           String(getMotivatedRestorePercent(player.skills.motivated)),
         )}
@@ -115,7 +115,7 @@ export default function Skills({ player, onBack }: Props) {
         skillDescription={_(
           "Increases your maximum energy by +10 per upgrade.",
         )}
-        skillSummary={_("+{{x}} max. energy").replace(
+        skillSummary={_("+{{x}} maximum energy").replace(
           "{{x}}",
           `${player.skills.maxEnergy * 10}`,
         )}
@@ -345,7 +345,7 @@ function SkillCard({
         </div>
       </div>
       <div style={{ marginTop: "0.75em" }}>
-        {_("At current level: {{x}}").replace("{{x}}", skillSummary)}
+        {skillLevel > 0 && skillSummary}
       </div>
       <div style={{ display: "flex", gap: "0.6em", marginTop: "1em" }}>
         <MenuButton
