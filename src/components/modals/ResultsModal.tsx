@@ -1,8 +1,12 @@
 import { MAIN_COLOR, RED } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 import { formatTime } from "~/lib/dateutil";
+import type { CSSProperties } from "react";
 
 import ConfirmModal from "./ConfirmModal";
+import styles from "./ResultsModal.module.css";
+
+const CHEST_BEAM_COUNT = 7;
 
 type Props = {
   time: number;
@@ -30,23 +34,34 @@ export default function ResultsModal({
   return (
     <ConfirmModal {...props}>
       <div>
-        <div style={{ marginBottom: onFireXp > 0 ? "1em" : "2em" }}>
+        <div style={{ marginBottom: "2em" }}>
           {_("ROUND COMPLETED!")}
           <hr />
         </div>
         <div style={{ textAlign: "center" }}>
           {onFireXp > 0 && (
             <>
-              <img
-                src={"/chest.png"}
-                aria-hidden
-                style={{
-                  width: "5em",
-                  height: "5em",
-                  padding: "0 0.2em",
-                }}
-              />
-              <div style={{ marginTop: "0.5em" }}>
+              <div className={styles.chestContainer}>
+                <div aria-hidden className={styles.chestFlare}>
+                  {Array.from({ length: CHEST_BEAM_COUNT }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={styles.chestFlareBeam}
+                      style={
+                        {
+                          "--beam-rotation": `${(360 / CHEST_BEAM_COUNT) * i}deg`,
+                        } as CSSProperties
+                      }
+                    />
+                  ))}
+                </div>
+                <img
+                  src={"/chest.png"}
+                  aria-hidden
+                  className={styles.chestImage}
+                />
+              </div>
+              <div style={{ marginTop: "0.5em", marginBottom: "1em" }}>
                 {_("+{{x}}xp").replace("{{x}}", String(onFireXp))}
               </div>
               <hr />
