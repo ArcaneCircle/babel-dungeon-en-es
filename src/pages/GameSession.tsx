@@ -8,12 +8,7 @@ import PixelBoltSolid from "~icons/pixel/bolt-solid";
 import { _ } from "~/lib/i18n";
 import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
 import { successSfx, errorSfx, clickSfx } from "~/lib/sounds";
-import {
-  MAX_LEVEL,
-  MASTERED_STREAK,
-  getCard,
-  sendMonsterUpdate,
-} from "~/lib/game";
+import { MASTERED_STREAK, getCard, sendMonsterUpdate } from "~/lib/game";
 import { tts } from "~/lib/tts";
 import {
   MAIN_COLOR,
@@ -191,9 +186,7 @@ function Quiz({
   const sentenceSize = sentence.length > 80 ? "0.9em" : undefined;
 
   const statusBarM = useMemo(
-    () => (
-      <StatusBar session={session} style={statusBarStyle} />
-    ),
+    () => <StatusBar session={session} style={statusBarStyle} />,
     [session],
   );
   const monsterM = useMemo(
