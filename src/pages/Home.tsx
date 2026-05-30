@@ -207,9 +207,15 @@ export default function Home({ player, onShowSkills }: Props) {
           <MenuButton style={baseBtn} onClick={onShowSettings}>
             <PixelCogSolid style={btnIcon} />
           </MenuButton>
-          <MenuButton style={baseBtn} onClick={onShowSkills}>
+          <MenuButton
+            style={{
+              ...baseBtn,
+              backgroundColor: player.skillPoints ? GOLDEN : BG_SECONDARY,
+              color: player.skillPoints ? "black" : TEXT_PRIMARY,
+            }}
+            onClick={onShowSkills}
+          >
             <StarSolidIcon style={btnIcon} />
-            {player.skillPoints > 0 && ` ${player.skillPoints}`}
           </MenuButton>
         </div>
         <MenuButton
