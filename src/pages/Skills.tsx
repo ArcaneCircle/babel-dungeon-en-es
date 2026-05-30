@@ -106,9 +106,26 @@ export default function Skills({ player, onBack }: Props) {
 
       <SkillCard
         availablePoints={player.skillPoints}
+        skillId={"fastLearner"}
+        skillIcon={"/fast-learner.png"}
+        skillIconColor={BLUE}
+        skillName={_("Fast Learner")}
+        skillLevel={player.skills.fastLearner}
+        skillMaxLevel={FAST_LEARNER_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "You learn faster than the average person, earning more experience than usual per correctly answered sentence (+1 XP per upgrade).",
+        )}
+        skillSummary={_("+{{x}} XP per correct answer").replace(
+          "{{x}}",
+          String(player.skills.fastLearner),
+        )}
+      />
+
+      <SkillCard
+        availablePoints={player.skillPoints}
         skillId={"maxEnergy"}
         skillIcon={"/stamina.png"}
-        skillIconColor={"#37B24D"}
+        skillIconColor={"#C62828"}
         skillName={_("Stamina")}
         skillLevel={player.skills.maxEnergy}
         skillMaxLevel={MAX_ENERGY_SKILL_MAX_LEVEL}
@@ -142,25 +159,9 @@ export default function Skills({ player, onBack }: Props) {
 
       <SkillCard
         availablePoints={player.skillPoints}
-        skillId={"goldenTouch"}
-        skillIcon={"/golden-touch.png"}
-        skillIconColor={GOLDEN}
-        skillName={_("Golden Touch")}
-        skillLevel={player.skills.goldenTouch}
-        skillMaxLevel={GOLDEN_TOUCH_SKILL_MAX_LEVEL}
-        skillDescription={_(
-          "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.",
-        )}
-        skillSummary={_(
-          "Monster's level increased by +{{x}} when the golden button is used",
-        ).replace("{{x}}", String(5 + player.skills.goldenTouch))}
-      />
-
-      <SkillCard
-        availablePoints={player.skillPoints}
         skillId={"lifeSteal"}
         skillIcon={"/life-steal.png"}
-        skillIconColor={"#C62828"}
+        skillIconColor={"#37B24D"}
         skillName={_("Life Steal")}
         skillLevel={player.skills.lifeSteal}
         skillMaxLevel={LIFE_STEAL_SKILL_MAX_LEVEL}
@@ -172,42 +173,6 @@ export default function Skills({ player, onBack }: Props) {
         skillSummary={_("{{x}}% chance of +5 energy on correct answer").replace(
           "{{x}}",
           String(getLifeStealChance(player.skills.lifeSteal)),
-        )}
-      />
-
-      <SkillCard
-        availablePoints={player.skillPoints}
-        skillId={"criticalHit"}
-        skillIcon={"/critical-hit.png"}
-        skillIconColor={"#E53935"}
-        skillName={_("Critical Hit")}
-        skillLevel={player.skills.criticalHit}
-        skillMaxLevel={CRITICAL_HIT_SKILL_MAX_LEVEL}
-        skillDescription={_(
-          "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.",
-        )
-          .replace("{{base}}", String(CRITICAL_HIT_BASE_CHANCE))
-          .replace("{{inc}}", String(CRITICAL_HIT_CHANCE_PER_LEVEL))}
-        skillSummary={_("{{x}}% chance of x1.5 XP on correct answer").replace(
-          "{{x}}",
-          String(getCriticalHitChance(player.skills.criticalHit)),
-        )}
-      />
-
-      <SkillCard
-        availablePoints={player.skillPoints}
-        skillId={"fastLearner"}
-        skillIcon={"/fast-learner.png"}
-        skillIconColor={BLUE}
-        skillName={_("Fast Learner")}
-        skillLevel={player.skills.fastLearner}
-        skillMaxLevel={FAST_LEARNER_SKILL_MAX_LEVEL}
-        skillDescription={_(
-          "You learn faster than the average person, earning more experience than usual per correctly answered sentence (+1 XP per upgrade).",
-        )}
-        skillSummary={_("+{{x}} XP per correct answer").replace(
-          "{{x}}",
-          String(player.skills.fastLearner),
         )}
       />
 
@@ -230,6 +195,41 @@ export default function Skills({ player, onBack }: Props) {
             String(player.skills.onFire * ON_FIRE_BASE_XP_PER_UPGRADE),
           )
           .replace("{{min}}", String(ON_FIRE_STREAK_THRESHOLD))}
+      />
+
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"goldenTouch"}
+        skillIcon={"/golden-touch.png"}
+        skillIconColor={GOLDEN}
+        skillName={_("Golden Touch")}
+        skillLevel={player.skills.goldenTouch}
+        skillMaxLevel={GOLDEN_TOUCH_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Pressing the golden button increases the monster's level more than usual, +1 level per upgrade.",
+        )}
+        skillSummary={_(
+          "Monster's level increased by +{{x}} when the golden button is used",
+        ).replace("{{x}}", String(5 + player.skills.goldenTouch))}
+      />
+
+      <SkillCard
+        availablePoints={player.skillPoints}
+        skillId={"criticalHit"}
+        skillIcon={"/critical-hit.png"}
+        skillIconColor={"#E53935"}
+        skillName={_("Critical Hit")}
+        skillLevel={player.skills.criticalHit}
+        skillMaxLevel={CRITICAL_HIT_SKILL_MAX_LEVEL}
+        skillDescription={_(
+          "Each correct answer has a {{base}}% chance to grant x1.5 XP, plus an additional +{{inc}}% chance per upgrade.",
+        )
+          .replace("{{base}}", String(CRITICAL_HIT_BASE_CHANCE))
+          .replace("{{inc}}", String(CRITICAL_HIT_CHANCE_PER_LEVEL))}
+        skillSummary={_("{{x}}% chance of x1.5 XP on correct answer").replace(
+          "{{x}}",
+          String(getCriticalHitChance(player.skills.criticalHit)),
+        )}
       />
 
       <MenuButton
