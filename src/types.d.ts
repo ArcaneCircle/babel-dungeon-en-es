@@ -99,6 +99,17 @@ declare interface PlayerSkills {
   onFire: number;
 }
 
+declare interface SkillEffectGain {
+  source: "criticalHit" | "normalAnswer" | "lifeSteal";
+  stat: "xp" | "energy";
+  amount: number;
+}
+
+declare interface MonsterUpdateResult {
+  modal: ModalPayload | null;
+  skillEffects: SkillEffectGain[];
+}
+
 declare interface Backup {
   version: number;
   lang: string;

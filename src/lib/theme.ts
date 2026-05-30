@@ -11,5 +11,6 @@ export const BORDER_COLOR = "var(--border-color)";
 export const MAIN_COLOR = "#92c81a";
 export const GOLDEN = "#fcc200";
 export const RED = "#da342f";
+export const BRIGHT_RED = "#FF3B30";
 export const YELLOW = "#eadb02";
 export const BLUE = "#1e90ff";

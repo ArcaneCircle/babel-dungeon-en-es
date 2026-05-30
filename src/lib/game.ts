@@ -87,6 +87,26 @@ const pendingMonsterUpdates: Array<{
   xp: number;
   energyGained: number;
 }> = [];
+// Keep in sync with `.skill-effect-counter` animation duration in `src/App.css`.
+const SKILL_EFFECT_ANIMATION_MS = 1000;
+let pendingSessionStateUpdateTimeout: ReturnType<typeof setTimeout> | null =
+  null;
+
+function updateSessionState(session: Session | null, delay = 0) {
+  // Only the newest session update should win; cancel stale delayed updates.
+  if (pendingSessionStateUpdateTimeout) {
+    clearTimeout(pendingSessionStateUpdateTimeout);
+    pendingSessionStateUpdateTimeout = null;
+  }
+  if (delay > 0) {
+    pendingSessionStateUpdateTimeout = setTimeout(() => {
+      setSessionState(session);
+      pendingSessionStateUpdateTimeout = null;
+    }, delay);
+    return;
+  }
+  setSessionState(session);
+}
 
 // Initialize SENTENCES based on learning language
 initializeSentences(getLearningLanguage());
@@ -294,9 +314,10 @@ function getResultsModal(
 export function sendMonsterUpdate(
   monster: Monster,
   correct: number,
-): ModalPayload | null {
+): MonsterUpdateResult {
   monster = { ...monster };
   let modal = null;
+  const skillEffects: SkillEffectGain[] = [];
   const now = new Date();
   const level = getLevel();
   monster.seen = now.getTime();
@@ -308,6 +329,17 @@ export function sendMonsterUpdate(
       xp = Math.min(bonus + monster.streak, 50) + getFastLearnerSkillLevel();
       if (rollCriticalHit()) {
         xp = Math.round(xp * CRITICAL_HIT_XP_MULTIPLIER);
+        skillEffects.push({
+          source: "criticalHit",
+          stat: "xp",
+          amount: xp,
+        });
+      } else {
+        skillEffects.push({
+          source: "normalAnswer",
+          stat: "xp",
+          amount: xp,
+        });
       }
     }
 
@@ -359,6 +391,13 @@ export function sendMonsterUpdate(
   updateMonster(monster, session);
   session.xp += xp;
   const currentEnergyGained = correct > 0 ? rollLifeSteal() : 0;
+  if (currentEnergyGained > 0) {
+    skillEffects.push({
+      source: "lifeSteal",
+      stat: "energy",
+      amount: currentEnergyGained,
+    });
+  }
   session.energyGained += currentEnergyGained;
   if (!session.pending.length && !session.failed.length) {
     // session finished, clear pending updates queue,
@@ -395,9 +434,15 @@ export function sendMonsterUpdate(
       xp,
       energyGained: currentEnergyGained,
     });
-    setSessionState(session);
+    updateSessionState(
+      session,
+      skillEffects.length ? SKILL_EFFECT_ANIMATION_MS : 0,
+    );
   }
-  return modal;
+  return {
+    modal,
+    skillEffects,
+  };
 }
 
 export function initGame(
@@ -441,7 +486,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         setPlayerState = payload.playerHook;
         setWelcomeCompleteState = payload.welcomeHook;
         setWelcomeCompleteState(!!getLearningLanguage());
-        setSessionState(getSession());
+        updateSessionState(getSession());
         // player must be set last because it used to detect initialization
         setPlayerState(await getPlayer());
 
@@ -473,7 +518,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         }
         if (needsUpdate) {
           setSession(session!);
-          setSessionState(session!);
+          updateSessionState(session!);
         }
         break;
       }
@@ -512,14 +557,14 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         }
         if (setPlayerState) setPlayerState(await getPlayer());
         setSession(session);
-        setSessionState(session);
+        updateSessionState(session);
         break;
       }
       case NEW_CMD: {
         setEnergy(payload.energy, payload.time);
         const session = await createNewSession(payload.time, payload.mode);
         setSession(session);
-        setSessionState(session);
+        updateSessionState(session);
         break;
       }
       case SKILL_UP_CMD: {
@@ -546,7 +591,7 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
         initializeSentences(getLearningLanguage());
         setWelcomeCompleteState(true);
         if (setPlayerState) setPlayerState(await getPlayer());
-        setSessionState(getSession());
+        updateSessionState(getSession());
         break;
       }
     }

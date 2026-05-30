@@ -67,3 +67,25 @@ a {
   cursor: auto;
   -webkit-tap-highlight-color: initial;
 }
+
+.skill-effect-counter {
+  position: absolute;
+  left: calc(50% + 60px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  animation: skill-effect-float 1s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes skill-effect-float {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0.2;
+    transform: translate(-50%, -2em);
+  }
+}

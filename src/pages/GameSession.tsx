@@ -2,6 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import PixelThumbsupSolid from "~icons/pixel/thumbsup-solid";
 import PixelThumbsdownSolid from "~icons/pixel/thumbsdown-solid";
 import PixelCrownSolid from "~icons/pixel/crown-solid";
+import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
+import PixelBoltSolid from "~icons/pixel/bolt-solid";
 
 import { _ } from "~/lib/i18n";
 import { getTTSEnabled, getSFXEnabled } from "~/lib/storage";
@@ -13,7 +15,14 @@ import {
   sendMonsterUpdate,
 } from "~/lib/game";
 import { tts } from "~/lib/tts";
-import { MAIN_COLOR, RED, GOLDEN, BG_PRIMARY, TEXT_PRIMARY } from "~/lib/theme";
+import {
+  MAIN_COLOR,
+  RED,
+  BLUE,
+  GOLDEN,
+  BG_PRIMARY,
+  TEXT_PRIMARY,
+} from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import MonsterCard from "~/components/MonsterCard";
@@ -40,6 +49,10 @@ const statusBarStyle = {
   position: "sticky",
   top: 0,
   backgroundColor: BG_PRIMARY,
+};
+
+type FloatingSkillEffect = SkillEffectGain & {
+  id: number;
 };
 
 interface Props {
@@ -75,7 +88,9 @@ function Quiz({
   monster,
 }: Props & { monster: Monster }) {
   const [show, setShow] = useState(false);
+  const [processing, setProcessing] = useState(false);
   const [modal, setModal] = useState(null as ModalPayload | null);
+  const [skillEffects, setSkillEffects] = useState([] as FloatingSkillEffect[]);
 
   const defaultMode =
     session.mode === "easy" ||
@@ -95,31 +110,69 @@ function Quiz({
   const pendingCount = session.failed.length + session.pending.length;
 
   const onFailed = useCallback(() => {
+    setProcessing(true);
     setShow(false);
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && !ttsWillSpeak) errorSfx.play();
     sendMonsterUpdate(monster, 0);
   }, [monster, ttsEnabled, sfxEnabled, defaultMode]);
+  const onSkillEffectDone = useCallback(
+    (id: number) =>
+      setSkillEffects((value) => value.filter((effect) => effect.id !== id)),
+    [],
+  );
+  const pushSkillEffects = useCallback((effects: SkillEffectGain[]) => {
+    if (!effects.length) return;
+    setSkillEffects((current) => [
+      ...current,
+      ...effects.map((effect) => ({
+        ...effect,
+        id: Date.now() + Math.random(),
+      })),
+    ]);
+  }, []);
   const onCorrect = useCallback(() => {
+    setProcessing(true);
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
       successSfx.play();
     }
-    const mod = sendMonsterUpdate(monster, 1);
+    const { modal: mod, skillEffects } = sendMonsterUpdate(monster, 1);
+    pushSkillEffects(skillEffects);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount]);
+  }, [
+    monster,
+    ttsEnabled,
+    sfxEnabled,
+    defaultMode,
+    pendingCount,
+    pushSkillEffects,
+  ]);
 
   const goldenTouch = player ? player.skills.goldenTouch : 0;
   const onMastered = useCallback(() => {
+    setProcessing(true);
     const ttsWillSpeak = ttsEnabled && defaultMode;
     if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
       successSfx.play();
     }
-    const mod = sendMonsterUpdate(monster, 5 + player.skills.goldenTouch);
+    const { modal: mod, skillEffects } = sendMonsterUpdate(
+      monster,
+      5 + player.skills.goldenTouch,
+    );
+    pushSkillEffects(skillEffects);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [monster, ttsEnabled, sfxEnabled, defaultMode, pendingCount, goldenTouch]);
+  }, [
+    monster,
+    ttsEnabled,
+    sfxEnabled,
+    defaultMode,
+    pendingCount,
+    goldenTouch,
+    pushSkillEffects,
+  ]);
 
   const onShow = useCallback(() => {
     if (ttsEnabled && !defaultMode) {
@@ -137,12 +190,11 @@ function Quiz({
 
   const sentenceSize = sentence.length > 80 ? "0.9em" : undefined;
 
-  const showXP = !player || player.lvl !== MAX_LEVEL;
   const statusBarM = useMemo(
     () => (
-      <StatusBar session={session} showXP={showXP} style={statusBarStyle} />
+      <StatusBar session={session} style={statusBarStyle} />
     ),
-    [session, showXP],
+    [session],
   );
   const monsterM = useMemo(
     () => (
@@ -199,9 +251,34 @@ function Quiz({
               style={{
                 padding: "0.5em 1em",
                 marginBottom: "6em",
+                position: "relative",
               }}
             >
               {monsterM}
+              {skillEffects.map((effect, index) => (
+                <div
+                  key={effect.id}
+                  className="skill-effect-counter"
+                  style={{
+                    fontSize: `${effect.source === "criticalHit" ? 1.2 : 1.1}em`,
+                    top: `${index * 1.1}em`,
+                    color:
+                      effect.source === "criticalHit"
+                        ? BLUE
+                        : effect.stat === "energy"
+                          ? GOLDEN
+                          : undefined,
+                  }}
+                  onAnimationEnd={() => onSkillEffectDone(effect.id)}
+                >
+                  +{effect.amount}
+                  {effect.stat === "xp" ? (
+                    <PixelSparklesSolid />
+                  ) : (
+                    <PixelBoltSolid />
+                  )}
+                </div>
+              ))}
               {show && (
                 <>
                   <div style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>
@@ -237,18 +314,21 @@ function Quiz({
                     <button
                       style={{ ...baseBtn, background: RED }}
                       onClick={onFailed}
+                      disabled={processing}
                     >
                       <PixelThumbsdownSolid />
                     </button>
                     <button
                       style={{ ...baseBtn, background: GOLDEN }}
                       onClick={onMastered}
+                      disabled={processing}
                     >
                       <PixelCrownSolid />
                     </button>
                     <button
                       style={{ ...baseBtn, background: MAIN_COLOR }}
                       onClick={onCorrect}
+                      disabled={processing}
                     >
                       <PixelThumbsupSolid />
                     </button>
