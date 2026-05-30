@@ -151,7 +151,6 @@ declare type ModalPayload =
       time: number;
       xp: number;
       onFireXp: number;
-      energyGained: number;
       accuracy: number;
       next: ModalPayload | null;
     };

@@ -44,6 +44,14 @@ body {
   font-size: 16px;
   overflow-wrap: break-word;
   word-break: break-word;
+
+  /* Pixelate instead of blurring*/
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
 }
 
 button,

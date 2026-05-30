@@ -305,7 +305,6 @@ function getResultsModal(
     time: endTime - session.start,
     xp: session.xp + session.onFireXp,
     onFireXp: session.onFireXp,
-    energyGained: session.energyGained,
     accuracy: Math.round((correct / total) * 100),
     next,
   };

@@ -8,7 +8,6 @@ type Props = {
   time: number;
   xp: number;
   onFireXp: number;
-  energyGained: number;
   accuracy: number;
   [key: string]: any;
 };
@@ -17,7 +16,6 @@ export default function ResultsModal({
   time,
   xp,
   onFireXp,
-  energyGained,
   accuracy,
   ...props
 }: Props) {
@@ -32,25 +30,28 @@ export default function ResultsModal({
   return (
     <ConfirmModal {...props}>
       <div>
-        <div style={{ marginBottom: "2em" }}>
+        <div style={{ marginBottom: onFireXp > 0 ? "1em" : "2em" }}>
           {_("ROUND COMPLETED!")}
           <hr />
         </div>
-        <div>
-          {energyGained > 0 && (
-            <div style={divStyle}>
-              <span>{_("Energy gained:")}</span>
-              <span>+{energyGained}</span>
-            </div>
-          )}
+        <div style={{ textAlign: "center" }}>
           {onFireXp > 0 && (
-            <div style={divStyle}>
-              <span>{_("On Fire:")}</span>
-              <span>{_("+{{x}}xp").replace("{{x}}", String(onFireXp))}</span>
-            </div>
+            <>
+              <img
+                src={"/chest.png"}
+                aria-hidden
+                style={{
+                  width: "5em",
+                  height: "5em",
+                  padding: "0 0.2em",
+                }}
+              />
+              <div style={{ marginTop: "0.5em" }}>
+                {_("+{{x}}xp").replace("{{x}}", String(onFireXp))}
+              </div>
+              <hr />
+            </>
           )}
-
-          {energyGained + onFireXp > 0 && <hr />}
 
           <div style={divStyle}>
             <span>{_("Time:")}</span>
