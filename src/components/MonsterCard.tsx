@@ -8,9 +8,15 @@ interface Props {
   monster: Monster;
   sentence: string;
   meanings?: React.ReactNode;
+  onMonsterClicked?: () => void;
 }
 
-export default function MonsterCard({ monster, sentence, meanings }: Props) {
+export default function MonsterCard({
+  monster,
+  sentence,
+  meanings,
+  onMonsterClicked,
+}: Props) {
   const label = monster.seen
     ? _("lvl.{{l}}").replace("{{l}}", String(monster.streak + 1))
     : _("NEW");
@@ -37,6 +43,7 @@ export default function MonsterCard({ monster, sentence, meanings }: Props) {
         width={80}
         height={80}
         style={{ marginBottom: "0.5em" }}
+        onClick={onMonsterClicked}
       />
       <div style={{ marginBottom: "0.8em" }}>
         <span style={labelStyle}>{label}</span>

@@ -9,6 +9,7 @@ const BASE_STYLE: React.CSSProperties = {
   objectFit: "contain",
   background: "url(card-bg.png)",
   padding: "10px",
+  cursor: "pointer",
 };
 
 interface Props {
