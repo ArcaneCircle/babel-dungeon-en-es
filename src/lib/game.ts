@@ -335,7 +335,7 @@ export function sendMonsterUpdate(
         });
       } else {
         skillEffects.push({
-          source: "normalAnswer",
+          source: "correctAnswer",
           stat: "xp",
           amount: xp,
         });
@@ -379,6 +379,12 @@ export function sendMonsterUpdate(
   } else {
     monster.streak = 0;
     monster.due = 0;
+    monster.lastFailed = now.getTime();
+    skillEffects.push({
+      source: "incorrectAnswer",
+      stat: "xp",
+      amount: 0,
+    });
   }
 
   const session = getSession()!;
@@ -523,7 +529,9 @@ async function processUpdate(update: ReceivedStatusUpdate<Payload>) {
       }
       case FINISHED_CMD: {
         const session = payload.session;
-        await db.monsters.bulkPut(session.correct);
+        await db.monsters.bulkPut(
+          session.correct.map(({ lastFailed: _, ...m }) => m),
+        );
 
         if (session.energyGained) {
           const { energy, time } = getEnergy(BASE_MAX_ENERGY);

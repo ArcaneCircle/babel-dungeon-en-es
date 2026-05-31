@@ -13,6 +13,7 @@ import { tts } from "~/lib/tts";
 import {
   MAIN_COLOR,
   RED,
+  BRIGHT_RED,
   BLUE,
   GOLDEN,
   BG_PRIMARY,
@@ -67,7 +68,7 @@ export default function GameSession({
     session.correct[session.correct.length - 1];
   return (
     <Quiz
-      key={monster.id}
+      key={`${monster.id}-${monster.lastFailed ?? 0}`}
       session={session}
       player={player}
       monster={monster}
@@ -102,12 +103,6 @@ function Quiz({
     }
   }, [monster, showingResults]);
 
-  const onFailed = useCallback(() => {
-    setProcessing(true);
-    setShow(false);
-    if (sfxEnabled) errorSfx.play();
-    sendMonsterUpdate(monster, 0);
-  }, [monster, sfxEnabled]);
   const onSkillEffectDone = useCallback(
     (id: number) =>
       setSkillEffects((value) => value.filter((effect) => effect.id !== id)),
@@ -123,6 +118,13 @@ function Quiz({
       })),
     ]);
   }, []);
+  const onFailed = useCallback(() => {
+    setProcessing(true);
+    setShow(false);
+    if (sfxEnabled) errorSfx.play();
+    const { skillEffects } = sendMonsterUpdate(monster, 0);
+    pushSkillEffects(skillEffects);
+  }, [monster, sfxEnabled, pushSkillEffects]);
   const onCorrect = useCallback(() => {
     setProcessing(true);
     if (sfxEnabled) successSfx.play();
@@ -225,30 +227,44 @@ function Quiz({
               }}
             >
               {monsterM}
-              {skillEffects.map((effect, index) => (
-                <div
-                  key={effect.id}
-                  className="skill-effect-counter"
-                  style={{
-                    fontSize: `${effect.source === "criticalHit" ? 1.2 : 1.1}em`,
-                    top: `${index * 1.1}em`,
-                    color:
-                      effect.source === "criticalHit"
-                        ? BLUE
-                        : effect.stat === "energy"
-                          ? GOLDEN
-                          : undefined,
-                  }}
-                  onAnimationEnd={() => onSkillEffectDone(effect.id)}
-                >
-                  +{effect.amount}
-                  {effect.stat === "xp" ? (
-                    <PixelSparklesSolid />
-                  ) : (
-                    <PixelBoltSolid />
-                  )}
-                </div>
-              ))}
+              {skillEffects.map((effect, index) => {
+                const emphasize =
+                  effect.source === "criticalHit" ||
+                  effect.source === "incorrectAnswer";
+                return (
+                  <div
+                    key={effect.id}
+                    className="skill-effect-counter"
+                    style={{
+                      top: `${index * (emphasize ? 1.4 : 1.1)}em`,
+                      fontSize: `${emphasize ? 1.2 : 1.1}em`,
+                      fontWeight: emphasize ? "bold" : undefined,
+                      color:
+                        effect.source === "incorrectAnswer"
+                          ? BRIGHT_RED
+                          : effect.source === "criticalHit"
+                            ? BLUE
+                            : effect.stat === "energy"
+                              ? GOLDEN
+                              : undefined,
+                    }}
+                    onAnimationEnd={() => onSkillEffectDone(effect.id)}
+                  >
+                    {effect.source === "incorrectAnswer" ? (
+                      "MISS"
+                    ) : (
+                      <>
+                        +{effect.amount}
+                        {effect.stat === "xp" ? (
+                          <PixelSparklesSolid />
+                        ) : (
+                          <PixelBoltSolid />
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
               {show && (
                 <>
                   <div style={{ paddingTop: "0.5em", paddingBottom: "0.5em" }}>

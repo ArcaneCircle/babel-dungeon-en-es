@@ -52,6 +52,7 @@ declare interface Monster {
   streak: number;
   due: number; // Timestamp
   seen: number; // Timestamp
+  lastFailed?: number; // Timestamp
 }
 
 declare interface Card {
@@ -100,7 +101,7 @@ declare interface PlayerSkills {
 }
 
 declare interface SkillEffectGain {
-  source: "criticalHit" | "normalAnswer" | "lifeSteal";
+  source: "correctAnswer" | "incorrectAnswer" | "criticalHit" | "lifeSteal";
   stat: "xp" | "energy";
   amount: number;
 }
