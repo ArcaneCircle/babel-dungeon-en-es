@@ -102,15 +102,12 @@ function Quiz({
     }
   }, [monster, showingResults]);
 
-  const pendingCount = session.failed.length + session.pending.length;
-
   const onFailed = useCallback(() => {
     setProcessing(true);
     setShow(false);
-    const ttsWillSpeak = ttsEnabled && defaultMode;
-    if (sfxEnabled && !ttsWillSpeak) errorSfx.play();
+    if (sfxEnabled) errorSfx.play();
     sendMonsterUpdate(monster, 0);
-  }, [monster, ttsEnabled, sfxEnabled, defaultMode]);
+  }, [monster, sfxEnabled]);
   const onSkillEffectDone = useCallback(
     (id: number) =>
       setSkillEffects((value) => value.filter((effect) => effect.id !== id)),
@@ -128,30 +125,17 @@ function Quiz({
   }, []);
   const onCorrect = useCallback(() => {
     setProcessing(true);
-    const ttsWillSpeak = ttsEnabled && defaultMode;
-    if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
-      successSfx.play();
-    }
+    if (sfxEnabled) successSfx.play();
     const { modal: mod, skillEffects } = sendMonsterUpdate(monster, 1);
     pushSkillEffects(skillEffects);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [
-    monster,
-    ttsEnabled,
-    sfxEnabled,
-    defaultMode,
-    pendingCount,
-    pushSkillEffects,
-  ]);
+  }, [monster, sfxEnabled, pushSkillEffects]);
 
   const goldenTouch = player ? player.skills.goldenTouch : 0;
   const onMastered = useCallback(() => {
     setProcessing(true);
-    const ttsWillSpeak = ttsEnabled && defaultMode;
-    if (sfxEnabled && (!ttsWillSpeak || pendingCount === 1)) {
-      successSfx.play();
-    }
+    if (sfxEnabled) successSfx.play();
     const { modal: mod, skillEffects } = sendMonsterUpdate(
       monster,
       5 + player.skills.goldenTouch,
@@ -159,15 +143,7 @@ function Quiz({
     pushSkillEffects(skillEffects);
     setShowingResults(!!mod);
     setModal(mod);
-  }, [
-    monster,
-    ttsEnabled,
-    sfxEnabled,
-    defaultMode,
-    pendingCount,
-    goldenTouch,
-    pushSkillEffects,
-  ]);
+  }, [monster, sfxEnabled, goldenTouch, pushSkillEffects]);
 
   const onShow = useCallback(() => {
     if (ttsEnabled && !defaultMode) {
@@ -215,6 +191,8 @@ function Quiz({
     },
     [modal],
   );
+
+  const pendingCount = session.failed.length + session.pending.length;
 
   return (
     <>
