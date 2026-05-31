@@ -239,12 +239,11 @@ function Quiz({
                       top: `${index * (emphasize ? 1.4 : 1.1)}em`,
                       fontSize: `${emphasize ? 1.2 : 1.1}em`,
                       fontWeight: emphasize ? "bold" : undefined,
-                      color:
-                        effect.source === "incorrectAnswer"
-                          ? BRIGHT_RED
-                          : effect.stat === "energy"
-                            ? GOLDEN
-                            : BLUE,
+                      color: emphasize
+                        ? BRIGHT_RED
+                        : effect.stat === "energy"
+                          ? MAIN_COLOR
+                          : BLUE,
                     }}
                     onAnimationEnd={() => onSkillEffectDone(effect.id)}
                   >
