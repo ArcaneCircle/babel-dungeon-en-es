@@ -242,11 +242,9 @@ function Quiz({
                       color:
                         effect.source === "incorrectAnswer"
                           ? BRIGHT_RED
-                          : effect.source === "criticalHit"
-                            ? BLUE
-                            : effect.stat === "energy"
-                              ? GOLDEN
-                              : undefined,
+                          : effect.stat === "energy"
+                            ? GOLDEN
+                            : BLUE,
                     }}
                     onAnimationEnd={() => onSkillEffectDone(effect.id)}
                   >

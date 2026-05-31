@@ -78,7 +78,7 @@ a {
 
 .skill-effect-counter {
   position: absolute;
-  left: calc(50% + 60px);
+  left: calc(50% + 50px);
   transform: translateX(-50%);
   display: flex;
   align-items: center;
@@ -90,7 +90,7 @@ a {
 @keyframes skill-effect-float {
   0% {
     opacity: 1;
-    transform: translate(-50%, 0);
+    transform: translate(-50%, 2em);
   }
   100% {
     opacity: 0.2;
