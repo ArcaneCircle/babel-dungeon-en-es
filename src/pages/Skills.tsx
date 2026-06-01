@@ -34,6 +34,7 @@ import {
   BLUE,
 } from "~/lib/theme";
 
+import NoDragImg from "~/components/NoDragImg";
 import MenuButton from "~/components/MenuButton";
 
 const card = {
@@ -289,7 +290,7 @@ function SkillCard({
         }}
       >
         <div style={{ display: "flex", gap: "0.75em", alignItems: "center" }}>
-          <img
+          <NoDragImg
             src={skillIcon}
             aria-hidden
             style={{
@@ -335,7 +336,7 @@ function SkillCard({
               alignItems: "center",
             }}
           >
-            <img
+            <NoDragImg
               src={"/upgrade.png"}
               alt=""
               aria-hidden

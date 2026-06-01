@@ -54,6 +54,10 @@ body {
   -webkit-font-smoothing: none;
 }
 
+img {
+  -webkit-user-drag: none;
+}
+
 button,
 button * {
   font-family: inherit;

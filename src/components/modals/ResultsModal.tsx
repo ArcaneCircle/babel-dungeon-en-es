@@ -3,6 +3,7 @@ import { _ } from "~/lib/i18n";
 import { formatTime } from "~/lib/dateutil";
 import type { CSSProperties } from "react";
 
+import NoDragImg from "~/components/NoDragImg";
 import ConfirmModal from "./ConfirmModal";
 import styles from "./ResultsModal.module.css";
 
@@ -55,7 +56,7 @@ export default function ResultsModal({
                     />
                   ))}
                 </div>
-                <img
+                <NoDragImg
                   src={"/chest.png"}
                   aria-hidden
                   className={styles.chestImage}

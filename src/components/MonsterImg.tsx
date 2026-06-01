@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { getAvatarFrames } from "~/lib/monsterid/monsterid";
+import NoDragImg from "~/components/NoDragImg";
 
 const EMPTY_IMAGE = "data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA=";
 const IDLE_FRAME_MS = 240;
@@ -69,7 +70,7 @@ export default function MonsterImg({
   }, [frames]);
 
   return (
-    <img
+    <NoDragImg
       src={frames[frameIndex] || EMPTY_IMAGE}
       width={width}
       height={height}
