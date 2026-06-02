@@ -349,6 +349,13 @@ function SkillCard({
       <div style={{ marginTop: "0.75em" }}>
         {skillLevel > 0 && skillSummary}
       </div>
+      {showDetails && (
+        <div
+          style={{ marginTop: "1em", lineHeight: 1.6, color: TEXT_TERTIARY }}
+        >
+          {skillDescription}
+        </div>
+      )}
       <div style={{ display: "flex", gap: "0.6em", marginTop: "1em" }}>
         <MenuButton
           onClick={() => setShowDetails((v) => !v)}
@@ -361,13 +368,6 @@ function SkillCard({
           {showDetails ? _("Hide Info") : _("More Info")}
         </MenuButton>
       </div>
-      {showDetails && (
-        <div
-          style={{ marginTop: "1em", lineHeight: 1.6, color: TEXT_TERTIARY }}
-        >
-          {skillDescription}
-        </div>
-      )}
     </div>
   );
 }
