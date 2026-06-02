@@ -40,8 +40,7 @@ import MenuButton from "~/components/MenuButton";
 const card = {
   display: "flex",
   flexDirection: "column" as "column",
-  border: `1px solid ${BORDER_COLOR}`,
-  borderRadius: "10px",
+  border: `2px solid ${BORDER_COLOR}`,
   padding: "1em",
   marginBottom: "1em",
 };
@@ -280,7 +279,7 @@ function SkillCard({
   const canUpgrade = availablePoints > 0 && skillLevel < skillMaxLevel;
 
   return (
-    <div style={card}>
+    <div className="pixel-corners" style={card}>
       <div
         style={{
           display: "flex",
@@ -290,17 +289,19 @@ function SkillCard({
         }}
       >
         <div style={{ display: "flex", gap: "0.75em", alignItems: "center" }}>
-          <NoDragImg
-            src={skillIcon}
-            aria-hidden
-            style={{
-              width: "3.2em",
-              height: "3.2em",
-              borderRadius: "8px",
-              background: skillIconColor,
-              padding: "0.2em",
-            }}
-          />
+          <div
+            className="pixel-corners"
+            style={{ background: skillIconColor, padding: "0.2em" }}
+          >
+            <NoDragImg
+              src={skillIcon}
+              aria-hidden
+              style={{
+                width: "3.2em",
+                height: "3.2em",
+              }}
+            />
+          </div>
           <div
             style={{
               display: "flex",

@@ -16,7 +16,6 @@ export default function MenuButton({ onClick, children, ...props }: Props) {
     backgroundColor: BG_SECONDARY,
     cursor: "pointer",
     border: "none",
-    borderRadius: "5px",
     padding: "0.5em",
   };
   props.style = { ...btnStyle, ...(props.style || {}) };
@@ -24,6 +23,9 @@ export default function MenuButton({ onClick, children, ...props }: Props) {
     if (getSFXEnabled()) clickSfx.play();
     onClick();
   };
+
+  props.className =
+    "pixel-corners4" + (props.className ? " " + props.className : "");
 
   return (
     <button onClick={clickWithSound} {...props}>

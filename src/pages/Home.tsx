@@ -33,8 +33,7 @@ import MenuButton from "~/components/MenuButton";
 const card = {
   display: "flex",
   flexDirection: "column" as "column",
-  border: `1px solid ${BORDER_COLOR}`,
-  borderRadius: "5px",
+  border: `2px solid ${BORDER_COLOR}`,
   padding: "10px",
 };
 
@@ -103,7 +102,7 @@ export default function Home({ player, onShowSkills }: Props) {
       </ModalContext.Provider>
 
       <div style={{ padding: "0.5em" }}>
-        <div style={{ ...card, marginBottom: "1em" }}>
+        <div className="pixel-corners" style={{ ...card, marginBottom: "1em" }}>
           <StatSection
             title={_("LEVEL")}
             number={player.lvl}
@@ -162,7 +161,7 @@ export default function Home({ player, onShowSkills }: Props) {
             numberColor={toReviewColor}
           />
         </div>
-        <div style={card}>
+        <div className="pixel-corners" style={card}>
           <div style={{ paddingTop: "0.5em", paddingBottom: "1em" }}>
             <div style={{ paddingBottom: "0.3em" }}>
               {_("Discovered:")}
