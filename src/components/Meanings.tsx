@@ -21,11 +21,11 @@ export default function Meanings({ meanings }: { meanings: string[] }) {
       </span>{" "}
       {count > 1 ? (
         <button
+          className="pixel-corners"
           onClick={onSwitch}
           style={{
             background: TEXT_PRIMARY,
             color: BG_PRIMARY,
-            borderRadius: "5px",
             border: "none",
             padding: "0.4em",
             fontWeight: "bold",

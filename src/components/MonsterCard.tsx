@@ -29,10 +29,10 @@ export default function MonsterCard({
   const labelStyle = {
     color: BG_PRIMARY,
     background: labelBg,
-    borderRadius: "5px",
-    padding: "0.3em",
+    padding: "0.4em",
     fontWeight: "bold",
     fontSize: "0.9em",
+    border: "none",
   };
   const fontSize = sentence.length > 80 ? "0.9em" : undefined;
 
@@ -46,7 +46,9 @@ export default function MonsterCard({
         onClick={onMonsterClicked}
       />
       <div style={{ marginBottom: "0.8em" }}>
-        <span style={labelStyle}>{label}</span>
+        <span className="pixel-corners" style={labelStyle}>
+          {label}
+        </span>
       </div>
       {meanings ? (
         meanings
