@@ -35,7 +35,6 @@ export default function MonsterCard({
     fontSize: "0.9em",
     border: "none",
   };
-  const fontSize = sentence.length > 80 ? "0.9em" : undefined;
 
   return (
     <div>

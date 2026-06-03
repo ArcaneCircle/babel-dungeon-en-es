@@ -3,7 +3,6 @@ import PixelRefreshSolid from "~icons/pixel/refresh-solid";
 
 import { clickSfx } from "~/lib/sounds";
 import { getSFXEnabled } from "~/lib/storage";
-import { BG_PRIMARY, TEXT_PRIMARY } from "~/lib/theme";
 
 import styles from "./Meanings.module.css";
 

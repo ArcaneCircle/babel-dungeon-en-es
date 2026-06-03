@@ -166,8 +166,6 @@ function Quiz({
     [monster.id],
   );
 
-  const sentenceSize = sentence.length > 80 ? "0.9em" : undefined;
-
   const statusBarM = useMemo(
     () => <StatusBar session={session} style={statusBarStyle} />,
     [session],
