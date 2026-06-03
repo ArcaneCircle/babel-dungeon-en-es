@@ -45,6 +45,7 @@ const statusBarStyle = {
   position: "sticky",
   top: 0,
   backgroundColor: BG_PRIMARY,
+  zIndex: 1,
 };
 
 type FloatingSkillEffect = SkillEffectGain & {
@@ -282,12 +283,7 @@ function Quiz({
                   {defaultMode ? (
                     meaningsComp
                   ) : (
-                    <div
-                      className="selectable"
-                      style={{ fontSize: sentenceSize }}
-                    >
-                      {sentence}
-                    </div>
+                    <Meanings key={monster.id} meanings={[sentence]} />
                   )}
                 </>
               )}

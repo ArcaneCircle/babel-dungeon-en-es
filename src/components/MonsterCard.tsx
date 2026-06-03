@@ -3,6 +3,7 @@ import { _ } from "~/lib/i18n";
 import { MAIN_COLOR, GOLDEN, TEXT_TERTIARY, BG_PRIMARY } from "~/lib/theme";
 
 import MonsterImg from "~/components/MonsterImg";
+import Meanings from "~/components/Meanings";
 
 interface Props {
   monster: Monster;
@@ -53,9 +54,7 @@ export default function MonsterCard({
       {meanings ? (
         meanings
       ) : (
-        <div className="selectable" style={{ fontSize, lineHeight: "1.5em" }}>
-          {sentence}
-        </div>
+        <Meanings key={monster.id} meanings={[sentence]} />
       )}
     </div>
   );
