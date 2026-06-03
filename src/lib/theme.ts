@@ -14,3 +14,7 @@ export const RED = "#da342f";
 export const BRIGHT_RED = "#FF3B30";
 export const YELLOW = "#eadb02";
 export const BLUE = "#1e90ff";
+
+export function applyPixelFont(enabled: boolean) {
+  document.body.classList.toggle("system-font", !enabled);
+}
