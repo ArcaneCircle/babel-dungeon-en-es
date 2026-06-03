@@ -26,12 +26,10 @@ import {
 } from "~/lib/game";
 import {
   MAIN_COLOR,
-  GOLDEN,
   BG_SECONDARY,
   BORDER_COLOR,
   TEXT_PRIMARY,
   TEXT_TERTIARY,
-  BLUE,
 } from "~/lib/theme";
 
 import NoDragImg from "~/components/NoDragImg";
@@ -89,7 +87,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"motivated"}
         skillIcon={"/blessed.png"}
-        skillIconColor={"#5B2E8A"}
         skillName={_("Blessed")}
         skillLevel={player.skills.motivated}
         skillMaxLevel={MOTIVATED_SKILL_MAX_LEVEL}
@@ -108,7 +105,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"fastLearner"}
         skillIcon={"/fast-learner.png"}
-        skillIconColor={BLUE}
         skillName={_("Fast Learner")}
         skillLevel={player.skills.fastLearner}
         skillMaxLevel={FAST_LEARNER_SKILL_MAX_LEVEL}
@@ -125,7 +121,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"maxEnergy"}
         skillIcon={"/stamina.png"}
-        skillIconColor={"#C62828"}
         skillName={_("Stamina")}
         skillLevel={player.skills.maxEnergy}
         skillMaxLevel={MAX_ENERGY_SKILL_MAX_LEVEL}
@@ -142,7 +137,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"berserker"}
         skillIcon={"/berserker.png"}
-        skillIconColor={"#FF6D00"}
         skillName={_("Berserker")}
         skillLevel={player.skills.berserker}
         skillMaxLevel={BERSERKER_SKILL_MAX_LEVEL}
@@ -161,7 +155,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"lifeSteal"}
         skillIcon={"/life-steal.png"}
-        skillIconColor={"#37B24D"}
         skillName={_("Life Steal")}
         skillLevel={player.skills.lifeSteal}
         skillMaxLevel={LIFE_STEAL_SKILL_MAX_LEVEL}
@@ -180,7 +173,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"onFire"}
         skillIcon={"/on-fire.png"}
-        skillIconColor={"#FF6D00"}
         skillName={_("On Fire")}
         skillLevel={player.skills.onFire}
         skillMaxLevel={ON_FIRE_SKILL_MAX_LEVEL}
@@ -201,7 +193,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"goldenTouch"}
         skillIcon={"/golden-touch.png"}
-        skillIconColor={GOLDEN}
         skillName={_("Golden Touch")}
         skillLevel={player.skills.goldenTouch}
         skillMaxLevel={GOLDEN_TOUCH_SKILL_MAX_LEVEL}
@@ -217,7 +208,6 @@ export default function Skills({ player, onBack }: Props) {
         availablePoints={player.skillPoints}
         skillId={"criticalHit"}
         skillIcon={"/critical-hit.png"}
-        skillIconColor={"#E53935"}
         skillName={_("Critical Hit")}
         skillLevel={player.skills.criticalHit}
         skillMaxLevel={CRITICAL_HIT_SKILL_MAX_LEVEL}
@@ -257,7 +247,6 @@ interface SkillCardProps {
   skillDescription: string;
   skillSummary: string;
   skillIcon: string;
-  skillIconColor: string;
 }
 
 function SkillCard({
@@ -269,7 +258,6 @@ function SkillCard({
   skillDescription,
   skillSummary,
   skillIcon,
-  skillIconColor,
 }: SkillCardProps) {
   const [showDetails, setShowDetails] = useState(false);
   const onUpgradeSkill = useCallback(async () => {
@@ -289,19 +277,14 @@ function SkillCard({
         }}
       >
         <div style={{ display: "flex", gap: "0.75em", alignItems: "center" }}>
-          <div
-            className="pixel-corners"
-            style={{ background: skillIconColor, padding: "0.2em" }}
-          >
-            <NoDragImg
-              src={skillIcon}
-              aria-hidden
-              style={{
-                width: "3.2em",
-                height: "3.2em",
-              }}
-            />
-          </div>
+          <NoDragImg
+            src={skillIcon}
+            aria-hidden
+            style={{
+              width: "3.4em",
+              height: "3.4em",
+            }}
+          />
           <div
             style={{
               display: "flex",

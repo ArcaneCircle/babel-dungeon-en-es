@@ -11,19 +11,6 @@
   --border-color: #464646;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f0f0f0;
-    --bg-tertiary: #e0e0e0;
-    --bg-modal-backdrop: rgba(220, 220, 220, 0.8);
-    --text-primary: #000000;
-    --text-secondary: #333333;
-    --text-tertiary: #666666;
-    --border-color: #cccccc;
-  }
-}
-
 * {
   -webkit-user-select: none;
   -moz-user-select: none;
