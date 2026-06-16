@@ -4,6 +4,7 @@ import { TEXT_SECONDARY } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 import { importGame, selectLanguage } from "~/lib/game";
 
+import NoDragImg from "~/components/NoDragImg";
 import MenuButton from "~/components/MenuButton";
 import { ModalContext } from "~/components/modals/Modal";
 import InvalidBackupModal from "~/components/modals/InvalidBackupModal";
@@ -78,7 +79,7 @@ export default function Welcome() {
       <div style={containerStyle}>
         {stage === "initial" ? (
           <>
-            <img src="icon.png" style={{ width: "8em" }} />
+            <NoDragImg src="icon.png" style={{ width: "8em" }} />
             <div style={titleStyle}>Babel Dungeon</div>
 
             <div style={buttonContainerStyle}>

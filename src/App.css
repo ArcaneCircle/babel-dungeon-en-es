@@ -11,19 +11,6 @@
   --border-color: #464646;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg-primary: #ffffff;
-    --bg-secondary: #f0f0f0;
-    --bg-tertiary: #e0e0e0;
-    --bg-modal-backdrop: rgba(220, 220, 220, 0.8);
-    --text-primary: #000000;
-    --text-secondary: #333333;
-    --text-tertiary: #666666;
-    --border-color: #cccccc;
-  }
-}
-
 * {
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -44,6 +31,24 @@ body {
   font-size: 16px;
   overflow-wrap: break-word;
   word-break: break-word;
+
+  /* Pixelate instead of blurring*/
+  image-rendering: -moz-crisp-edges;
+  image-rendering: -webkit-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  font-smooth: never;
+  -webkit-font-smoothing: none;
+}
+
+body.system-font {
+  font-family: system-ui;
+  font-smooth: auto;
+  -webkit-font-smoothing: auto;
+}
+
+img {
+  -webkit-user-drag: none;
 }
 
 button,
@@ -66,4 +71,132 @@ a {
   -webkit-touch-callout: default;
   cursor: auto;
   -webkit-tap-highlight-color: initial;
+}
+
+.pixel-corners4 {
+  clip-path: polygon(
+    0px calc(100% - 4px),
+    4px calc(100% - 4px),
+    4px 100%,
+    calc(100% - 4px) 100%,
+    calc(100% - 4px) calc(100% - 4px),
+    100% calc(100% - 4px),
+    100% 4px,
+    calc(100% - 4px) 4px,
+    calc(100% - 4px) 0px,
+    4px 0px,
+    4px 4px,
+    0px 4px
+  );
+}
+.pixel-corners {
+  clip-path: polygon(
+    0px calc(100% - 2px),
+    2px calc(100% - 2px),
+    2px 100%,
+    calc(100% - 2px) 100%,
+    calc(100% - 2px) calc(100% - 2px),
+    100% calc(100% - 2px),
+    100% 2px,
+    calc(100% - 2px) 2px,
+    calc(100% - 2px) 0px,
+    2px 0px,
+    2px 2px,
+    0px 2px
+  );
+  position: relative;
+  border: 4px solid transparent;
+}
+.pixel-corners::after {
+  content: "";
+  position: absolute;
+  clip-path: polygon(
+    0px calc(100% - 2px),
+    2px calc(100% - 2px),
+    2px 100%,
+    calc(100% - 2px) 100%,
+    calc(100% - 2px) calc(100% - 2px),
+    100% calc(100% - 2px),
+    100% 2px,
+    calc(100% - 2px) 2px,
+    calc(100% - 2px) 0px,
+    2px 0px,
+    2px 2px,
+    0px 2px,
+    0px 50%,
+    4px 50%,
+    4px 8px,
+    4px 6px,
+    6px 6px,
+    6px 4px,
+    8px 4px,
+    calc(100% - 8px) 4px,
+    calc(100% - 6px) 4px,
+    calc(100% - 6px) 6px,
+    calc(100% - 4px) 6px,
+    calc(100% - 4px) 8px,
+    calc(100% - 4px) calc(100% - 8px),
+    calc(100% - 4px) calc(100% - 6px),
+    calc(100% - 6px) calc(100% - 6px),
+    calc(100% - 6px) calc(100% - 4px),
+    calc(100% - 8px) calc(100% - 4px),
+    8px calc(100% - 4px),
+    6px calc(100% - 4px),
+    6px calc(100% - 6px),
+    4px calc(100% - 6px),
+    4px calc(100% - 8px),
+    4px 50%,
+    0px 50%
+  );
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--border-color);
+  display: block;
+  pointer-events: none;
+  margin: -4px;
+}
+
+.skill-effect-counter {
+  position: absolute;
+  left: calc(50% + 50px);
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+  animation: skill-effect-float 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 999;
+}
+
+@keyframes skill-effect-float {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 2em);
+  }
+  100% {
+    opacity: 0.2;
+    transform: translate(-50%, -2em);
+  }
+}
+
+@keyframes skills-button-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.skills-btn-attention {
+  animation: skills-button-blink 1.5s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skills-btn-attention {
+    animation: none;
+  }
 }

@@ -1,17 +1,29 @@
-import { MAIN_COLOR, RED } from "~/lib/constants";
+import { MAIN_COLOR, RED } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 import { formatTime } from "~/lib/dateutil";
+import type { CSSProperties } from "react";
 
+import NoDragImg from "~/components/NoDragImg";
 import ConfirmModal from "./ConfirmModal";
+import styles from "./ResultsModal.module.css";
+
+const CHEST_BEAM_COUNT = 7;
 
 type Props = {
   time: number;
   xp: number;
+  onFireXp: number;
   accuracy: number;
   [key: string]: any;
 };
 
-export default function ResultsModal({ time, xp, accuracy, ...props }: Props) {
+export default function ResultsModal({
+  time,
+  xp,
+  onFireXp,
+  accuracy,
+  ...props
+}: Props) {
   const divStyle = {
     display: "flex",
     flexDirection: "row" as "row",
@@ -27,18 +39,49 @@ export default function ResultsModal({ time, xp, accuracy, ...props }: Props) {
           {_("ROUND COMPLETED!")}
           <hr />
         </div>
-        <div>
+        <div style={{ textAlign: "center" }}>
+          {onFireXp > 0 && (
+            <>
+              <div className={styles.chestContainer}>
+                <div aria-hidden className={styles.chestFlare}>
+                  {Array.from({ length: CHEST_BEAM_COUNT }).map((_, i) => (
+                    <span
+                      key={i}
+                      className={styles.chestFlareBeam}
+                      style={
+                        {
+                          "--beam-rotation": `${(360 / CHEST_BEAM_COUNT) * i}deg`,
+                        } as CSSProperties
+                      }
+                    />
+                  ))}
+                </div>
+                <NoDragImg
+                  src={"/chest.png"}
+                  aria-hidden
+                  className={styles.chestImage}
+                />
+              </div>
+              <div style={{ marginTop: "0.5em", marginBottom: "1em" }}>
+                {_("+{{x}}xp").replace("{{x}}", String(onFireXp))}
+              </div>
+              <hr />
+            </>
+          )}
+
           <div style={divStyle}>
-            <span>{_("Total XP:")}</span>
-            <span>+{xp}</span>
+            <span>{_("Time:")}</span>
+            <span>{formatTime(time)}</span>
           </div>
+
           <div style={divStyle}>
             <span>{_("Accuracy:")}</span>
             <span style={{ color: accuracyColor }}>{accuracy}%</span>
           </div>
+
           <div style={divStyle}>
-            <span>{_("Time:")}</span>
-            <span>{formatTime(time)}</span>
+            <span>{_("Total XP:")}</span>
+            <span>+{xp}</span>
           </div>
         </div>
       </div>

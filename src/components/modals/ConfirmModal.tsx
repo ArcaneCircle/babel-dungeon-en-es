@@ -1,6 +1,6 @@
 import { useContext } from "react";
 
-import { MAIN_COLOR } from "~/lib/constants";
+import { MAIN_COLOR } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 
 import { ModalContext } from "~/components/modals/Modal";

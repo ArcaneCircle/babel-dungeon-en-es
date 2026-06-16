@@ -7,7 +7,6 @@ const container = {
   overflow: "hidden" as "hidden",
   alignItems: "center",
   border: `2px solid ${BORDER_COLOR}`,
-  borderRadius: "5px",
   position: "relative" as "relative",
 };
 const row = {
@@ -25,6 +24,7 @@ interface Props {
   color: string;
   label?: string;
   lite?: boolean;
+  [key: string]: any;
 }
 
 export default function PixelatedProgressBar({
@@ -33,6 +33,7 @@ export default function PixelatedProgressBar({
   color,
   lite,
   label,
+  ...props
 }: Props) {
   const height = lite ? "15px" : "20px";
   const labelStyle = {
@@ -59,8 +60,12 @@ export default function PixelatedProgressBar({
   const hide = percentage === 100 || progress === 0;
   const pixels = { minWidth: "15px", display: hide ? "none" : "inline-block" };
 
+  props.style = { ...container, height, ...(props.style || {}) };
+  props.className =
+    "pixel-corners" + (props.className ? " " + props.className : "");
+
   return (
-    <div style={{ ...container, height }}>
+    <div {...props}>
       {label && <div style={labelStyle}>{label}</div>}
       <div style={progressStyle}></div>
       <div style={pixels}>

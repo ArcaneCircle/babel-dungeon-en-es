@@ -11,9 +11,8 @@ declare type Payload = { uid: string } & (
         monster: Monster;
         sessionId: number;
         xp: number;
+        energyGained: number;
       }[];
-      sessionId: number;
-      xp: number;
     }
   | {
       cmd: "finished";
@@ -33,6 +32,19 @@ declare type Payload = { uid: string } & (
       cmd: "lang";
       lang: "LANG1" | "LANG2";
     }
+  | {
+      cmd: "skill-up";
+      skill: keyof PlayerSkills;
+      skillPoints: number;
+      motivated: number;
+      maxEnergy: number;
+      berserker: number;
+      goldenTouch: number;
+      lifeSteal: number;
+      criticalHit: number;
+      fastLearner: number;
+      onFire: number;
+    }
 );
 
 declare interface Monster {
@@ -40,6 +52,7 @@ declare interface Monster {
   streak: number;
   due: number; // Timestamp
   seen: number; // Timestamp
+  lastFailed?: number; // Timestamp
 }
 
 declare interface Card {
@@ -52,6 +65,8 @@ declare interface Session {
   start: number;
   mode: GameMode;
   xp: number;
+  onFireXp: number;
+  energyGained: number;
   failedIds: number[];
   correct: Monster[];
   failed: Monster[];
@@ -64,12 +79,36 @@ declare interface Player {
   totalXp: number;
   energy: number;
   maxEnergy: number;
+  skillPoints: number;
+  skills: PlayerSkills;
   streak: number;
   studiedToday: number; // number of sentences studied today
   toReview: number;
   seen: number; // number of sentences seen
   mastered: number; // number of sentences mastered
   total: number; // total number of sentences
+}
+
+declare interface PlayerSkills {
+  motivated: number;
+  maxEnergy: number;
+  berserker: number;
+  goldenTouch: number;
+  lifeSteal: number;
+  criticalHit: number;
+  fastLearner: number;
+  onFire: number;
+}
+
+declare interface SkillEffectGain {
+  source: "correctAnswer" | "incorrectAnswer" | "criticalHit" | "lifeSteal";
+  stat: "xp" | "energy";
+  amount: number;
+}
+
+declare interface MonsterUpdateResult {
+  modal: ModalPayload | null;
+  skillEffects: SkillEffectGain[];
 }
 
 declare interface Backup {
@@ -85,23 +124,35 @@ declare interface Backup {
   energyTimestamp: string;
   studiedToday: string;
   lastPlayed: string;
+  skillPoints: string;
+  motivatedSkill: string;
+  maxEnergySkill: string;
+  berserkerSkill: string;
+  goldenTouchSkill: string;
+  lifeStealSkill: string;
+  criticalHitSkill: string;
+  fastLearnerSkill: string;
+  onFireSkill: string;
   sfx: string;
   tts: string;
+  pixelFont: string;
   learningLanguage: string;
 }
 
-declare type GameMode = "easy" | "medium" | "hard";
+declare type GameMode = "easy" | "normal";
 
 declare type ModalPayload =
   | {
       type: "levelUp";
       newLevel: number;
-      newEnergy: number;
+      restoredEnergy: number;
+      skillPoints: number;
     }
   | {
       type: "results";
       time: number;
       xp: number;
+      onFireXp: number;
       accuracy: number;
       next: ModalPayload | null;
     };

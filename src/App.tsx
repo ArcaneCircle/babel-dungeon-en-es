@@ -1,10 +1,12 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 
-import { MAX_LEVEL } from "~/lib/constants";
 import { initGame } from "~/lib/game";
+import { getPixelFontEnabled } from "~/lib/storage";
+import { applyPixelFont } from "~/lib/theme";
 
 import Home from "~/pages/Home";
 import GameSession from "~/pages/GameSession";
+import Skills from "~/pages/Skills";
 import Welcome from "~/pages/Welcome";
 
 // @ts-ignore
@@ -16,10 +18,11 @@ export default function App() {
   const [forceSession, setForceSession] = useState(false);
   const [player, setPlayer] = useState(null as Player | null);
   const [welcomeComplete, setWelcomeCompleteState] = useState(false);
+  const [screen, setScreen] = useState("home" as "home" | "skills");
   useMemo(() => initGame(setSession, setPlayer, setWelcomeCompleteState), []);
+  useEffect(() => applyPixelFont(getPixelFontEnabled()), []);
 
   const playing = session && session.pending.length + session.failed.length;
-  const showXP = !player || player.lvl !== MAX_LEVEL;
 
   // don't render anything if initialization hasn't finished
   if (!player) return;
@@ -32,10 +35,12 @@ export default function App() {
         <GameSession
           session={session}
           setShowingResults={setForceSession}
-          showXP={showXP}
+          player={player}
         />
+      ) : screen === "skills" ? (
+        <Skills player={player} onBack={() => setScreen("home")} />
       ) : (
-        <Home player={player} />
+        <Home player={player} onShowSkills={() => setScreen("skills")} />
       )}
     </>
   );

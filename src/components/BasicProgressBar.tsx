@@ -1,5 +1,4 @@
-import { MAIN_COLOR } from "~/lib/constants";
-import { BORDER_COLOR } from "~/lib/theme";
+import { MAIN_COLOR, BORDER_COLOR } from "~/lib/theme";
 
 interface Props {
   progress: number;

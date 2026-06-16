@@ -5,7 +5,7 @@ A gamified tool for English/Spanish vocabulary learning
 ## Creating new flavor
 
 - update `public/manifest.toml` and `public/icon.png`
-- replace `test-data.tsv` with the new game data
+- replace `*.tsv` with the new game data
 - update `LANG1_*` and `LANG2_*` in `src/lib/constants.ts`
 - if necessary add localization for the interface strings at
   `src/lib/langs` and update `src/lib/i18n.ts` accordingly.
@@ -75,9 +75,11 @@ git push origin v1.0.1
 
 - Font used: [Press Start 2P](https://github.com/fontsource/font-files/tree/main/fonts/google/press-start-2p) by Google (OFL-1.1 licensed)
 
-- Random monster generator code taken from https://github.com/fabianobizarro/react-monsterid (MIT license)
+- Random monster generator inspired by https://masterpose.itch.io/pixelduuuuudesmaker
 
 - UI Icons from "Pixel Icon" by [HackerNoon](https://github.com/hackernoon/pixel-icon-library) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/))
+
+- Monster card's background created using tiles from https://cafedraw.itch.io/fantasy-card-assets
 
 - Level-up SFX is "VictorySmall.wav" from https://opengameart.org/content/8-bit-sound-fx (CC0 - public domain)
 

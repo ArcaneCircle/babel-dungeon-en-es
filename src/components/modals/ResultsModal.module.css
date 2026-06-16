@@ -1,0 +1,49 @@
+.chestContainer {
+  position: relative;
+  width: 5em;
+  height: 5em;
+  margin: 0 auto;
+  padding: 0 0.2em;
+}
+
+.chestFlare {
+  position: absolute;
+  inset: -1.2em;
+  animation: chestFlareRotate 10s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.chestFlareBeam {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 2em;
+  height: 4.5em;
+  transform-origin: 50% 100%;
+  transform: translate(-50%, -100%) rotate(var(--beam-rotation));
+  clip-path: polygon(50% 100%, 100% 0, 0 0);
+  background: linear-gradient(
+    to top,
+    rgba(255, 236, 130, 0.62) 0%,
+    rgba(255, 224, 100, 0.3) 58%,
+    rgba(255, 220, 100, 0) 100%
+  );
+  filter: blur(0.08em);
+}
+
+.chestImage {
+  position: relative;
+  z-index: 1;
+  width: 5em;
+  height: 5em;
+}
+
+@keyframes chestFlareRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

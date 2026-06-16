@@ -1,6 +1,7 @@
 import es from "./langs/es.json";
 import de from "./langs/de.json";
-const langs = { es, de };
+import eu from "./langs/eu.json";
+const langs = { es, de, eu };
 
 type LangCode = keyof typeof langs;
 type TranslationKey = keyof (typeof langs)[LangCode];

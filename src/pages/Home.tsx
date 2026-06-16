@@ -4,37 +4,65 @@ import PixelCrownSolid from "~icons/pixel/crown-solid";
 import PixelFireSolid from "~icons/pixel/fire-solid";
 import PixelBoltSolid from "~icons/pixel/bolt-solid";
 import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
+import PixelCogSolid from "~icons/pixel/cog-solid";
+import StarSolidIcon from "~icons/pixel/star-solid?width=1em&height=1em";
 
-import { MAIN_COLOR, GOLDEN, BLUE, YELLOW } from "~/lib/constants";
 import { _ } from "~/lib/i18n";
 import { getLastPlayed } from "~/lib/storage";
-import { BORDER_COLOR, TEXT_TERTIARY } from "~/lib/theme";
+import { ON_FIRE_STREAK_THRESHOLD } from "~/lib/game";
+import {
+  MAIN_COLOR,
+  GOLDEN,
+  BLUE,
+  YELLOW,
+  BORDER_COLOR,
+  TEXT_PRIMARY,
+  TEXT_TERTIARY,
+  BG_SECONDARY,
+} from "~/lib/theme";
 
 import { ModalContext } from "~/components/modals/Modal";
 import NoEnergyModal from "~/components/modals/NoEnergyModal";
 import GameModeModal from "~/components/modals/GameModeModal";
+import SettingsModal from "~/components/modals/SettingsModal";
+import CreditsModal from "~/components/modals/CreditsModal";
 import PixelatedProgressBar from "~/components/PixelatedProgressBar";
 import StatSection from "~/components/StatSection";
-import TitleBar from "~/components/TitleBar";
 import MenuButton from "~/components/MenuButton";
 
 const card = {
   display: "flex",
   flexDirection: "column" as "column",
-  border: `1px solid ${BORDER_COLOR}`,
-  borderRadius: "5px",
+  border: `2px solid ${BORDER_COLOR}`,
   padding: "10px",
+};
+
+const btnIcon = { fontSize: "1.5em" };
+
+const baseBtn = {
+  color: TEXT_PRIMARY,
+  backgroundColor: BG_SECONDARY,
+  padding: "0.6em 0.5em",
+};
+
+const secondaryBtnRow = {
+  display: "flex",
+  gap: "1em",
+  marginTop: "1em",
 };
 
 interface Props {
   player: Player;
+  onShowSkills: () => void;
 }
 
-export default function Home({ player }: Props) {
-  const [modal, setModal] = useState(null as "noEnergy" | "play" | null);
+export default function Home({ player, onShowSkills }: Props) {
+  const [modal, setModal] = useState(
+    null as "noEnergy" | "play" | "settings" | "credits" | null,
+  );
   const today = new Date().setHours(0, 0, 0, 0);
   const lastPlayed = getLastPlayed();
-  const epicStreak = player.streak >= 7;
+  const epicStreak = player.streak >= ON_FIRE_STREAK_THRESHOLD;
   const streakColor =
     lastPlayed === today ? (epicStreak ? GOLDEN : MAIN_COLOR) : TEXT_TERTIARY;
   const streakSize = player.streak > 999 ? "0.9em" : undefined;
@@ -48,6 +76,7 @@ export default function Home({ player }: Props) {
   const masteredRankColor = maxMasteredRank ? GOLDEN : undefined;
 
   const onPlay = useCallback(() => setModal("play"), []);
+  const onShowSettings = useCallback(() => setModal("settings"), []);
   const setOpen = useCallback(
     (show: boolean) => (show ? setModal(modal) : setModal(null)),
     [modal],
@@ -65,11 +94,15 @@ export default function Home({ player }: Props) {
             onNoEnergy={onNoEnergy}
             style={{ minWidth: "60vw" }}
           />
+        ) : modal === "settings" ? (
+          <SettingsModal onShowCredits={() => setModal("credits")} />
+        ) : modal === "credits" ? (
+          <CreditsModal />
         ) : null}
       </ModalContext.Provider>
-      <TitleBar />
+
       <div style={{ padding: "0.5em" }}>
-        <div style={{ ...card, marginBottom: "1em" }}>
+        <div className="pixel-corners" style={{ ...card, marginBottom: "1em" }}>
           <StatSection
             title={_("LEVEL")}
             number={player.lvl}
@@ -128,7 +161,7 @@ export default function Home({ player }: Props) {
             numberColor={toReviewColor}
           />
         </div>
-        <div style={card}>
+        <div className="pixel-corners" style={card}>
           <div style={{ paddingTop: "0.5em", paddingBottom: "1em" }}>
             <div style={{ paddingBottom: "0.3em" }}>
               {_("Discovered:")}
@@ -168,17 +201,33 @@ export default function Home({ player }: Props) {
             />
           </div>
         </div>
+
+        <div style={secondaryBtnRow}>
+          <MenuButton style={baseBtn} onClick={onShowSettings}>
+            <PixelCogSolid style={btnIcon} />
+          </MenuButton>
+          <MenuButton
+            className={player.skillPoints ? "skills-btn-attention" : undefined}
+            style={{
+              ...baseBtn,
+              backgroundColor: player.skillPoints ? GOLDEN : BG_SECONDARY,
+              color: player.skillPoints ? "black" : TEXT_PRIMARY,
+            }}
+            onClick={onShowSkills}
+          >
+            <StarSolidIcon style={btnIcon} />
+          </MenuButton>
+        </div>
         <MenuButton
           style={{
-            fontSize: "1.5em",
+            ...baseBtn,
+            marginTop: "1em",
             color: "black",
             background: MAIN_COLOR,
-            padding: "0.6em 0.5em",
-            marginTop: "1em",
           }}
           onClick={onPlay}
         >
-          <PixelPlaySolid />
+          <PixelPlaySolid style={btnIcon} />
         </MenuButton>
       </div>
     </>

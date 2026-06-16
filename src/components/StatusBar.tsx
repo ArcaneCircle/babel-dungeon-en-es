@@ -1,15 +1,13 @@
 import PixelThumbsupSolid from "~icons/pixel/thumbsup-solid";
 import PixelThumbsdownSolid from "~icons/pixel/thumbsdown-solid";
 import PixelFaceThinkingSolid from "~icons/pixel/face-thinking-solid";
-import PixelSparklesSolid from "~icons/pixel/sparkles-solid";
 
-import { MAIN_COLOR, RED, GOLDEN } from "~/lib/constants";
+import { MAIN_COLOR, RED, GOLDEN } from "~/lib/theme";
 import { _ } from "~/lib/i18n";
 
 import BasicProgressBar from "./BasicProgressBar";
 
 interface Props {
-  showXP: boolean;
   session: Session;
   [key: string]: any;
 }
@@ -18,7 +16,7 @@ const AlignedSpan = ({ children }: { children: React.ReactNode }) => (
   <span style={{ alignContent: "end" }}>{children}</span>
 );
 
-export default function StatusBar({ showXP, session, ...props }: Props) {
+export default function StatusBar({ session, ...props }: Props) {
   const total =
     session.correct.length + session.failed.length + session.pending.length;
 
@@ -32,12 +30,6 @@ export default function StatusBar({ showXP, session, ...props }: Props) {
           padding: "0.5em 1em",
         }}
       >
-        {showXP && (
-          <AlignedSpan>
-            +{session.xp}
-            <PixelSparklesSolid />
-          </AlignedSpan>
-        )}
         <AlignedSpan>
           <PixelThumbsupSolid
             style={{ color: MAIN_COLOR, marginRight: "0.2em" }}

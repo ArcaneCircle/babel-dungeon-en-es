@@ -45,7 +45,7 @@ def main() -> None:
         count = int(args[2])
     else:
         start = 0
-        count = 100000
+        count = 50000
 
     sentences: dict[str, int] = {}
     sentences_ids: set[int] = set()  # for counting duplicates
